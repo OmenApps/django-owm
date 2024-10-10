@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Weather for {{ location.name }}</h1>
+    {% if current_weather %}
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Current Weather</h5>
+                <p class="card-text">Temperature: {{ current_weather.temp }} K</p>
+                <p class="card-text">Feels Like: {{ current_weather.feels_like }} K</p>
+                <p class="card-text">Pressure: {{ current_weather.pressure }} hPa</p>
+                <p class="card-text">Humidity: {{ current_weather.humidity }}%</p>
+                <!-- Add more fields as desired -->
+            </div>
+        </div>
+    {% else %}
+        <p>No current weather data available.</p>
+    {% endif %}
+</div>
+{% endblock %}

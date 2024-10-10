@@ -1,0 +1,20 @@
+{
+  "_checkout": "2024.05.3",
+  "_output_dir": "/home/watervize/omenapps_packages",
+  "_repo_dir": "/home/watervize/.cookiecutters/cookiecutter-django-package",
+  "_template": "gh:OmenApps/cookiecutter-django-package",
+  "author": "Jack Linke",
+  "copyright_year": "2024",
+  "development_status": "Development Status :: 1 - Planning",
+  "docker_compose_python_version": "3.12",
+  "email": "jacklinke@gmail.com",
+  "github_owner": "OmenApps",
+  "github_user": "jacklinke",
+  "license": "MIT",
+  "package_description": "Weather from the Open Weather Map APIs",
+  "package_name": "django_owm",
+  "project_name": "django-owm",
+  "use_playwright": "n",
+  "use_postgres": "n",
+  "version": "2024.10.1"
+}
