@@ -1,4 +1,4 @@
-"""App configuration."""
+"""App configuration for the django_owm app."""
 
 from django.apps import AppConfig
 
