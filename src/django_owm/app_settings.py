@@ -18,11 +18,15 @@ DJANGO_OWM = getattr(settings, "DJANGO_OWM", {})
 #         # Future APIs can be added here
 #     },
 #     'OWM_MODEL_MAPPINGS': {
-#         # Map abstract model names to concrete model paths
-#         # 'WeatherLocation': 'myapp.models.MyWeatherLocation',
-#         # 'CurrentWeather': 'myapp.models.MyCurrentWeather',
-#         # 'WeatherCondition': 'myapp.models.MyWeatherCondition',
-#         # etc.
+#         # Map abstract model names to appname.ModelName
+#         'WeatherLocation': 'myapp.MyWeatherLocation',
+#         'CurrentWeather': 'myapp.MyCurrentWeather',
+#         'MinutelyWeather': 'myapp.MyMinutelyWeather',
+#         'HourlyWeather': 'myapp.MyHourlyWeather',
+#         'DailyWeather': 'myapp.MyDailyWeather',
+#         'WeatherAlert': 'myapp.MyWeatherAlert',
+#         'WeatherErrorLog': 'myapp.MyWeatherErrorLog',
+#         'APICallLog': 'myapp.MyAPICallLog',
 #     },
 #     'OWM_BASE_MODEL': models.Model,  # Base model for OWM models
 #     'OWM_USE_BUILTIN_ADMIN': True,  # Use built-in admin for OWM models
@@ -32,7 +36,9 @@ DJANGO_OWM = getattr(settings, "DJANGO_OWM", {})
 class Model(models.Model):
     """Simply provides a base model with a Meta class."""
 
-    class Meta:
+    class Meta:  # pylint: disable=R0903
+        """Meta options for the base model."""
+
         abstract = True
 
     objects = models.Manager()
