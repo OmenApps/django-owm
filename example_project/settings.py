@@ -1,10 +1,10 @@
 """Django settings for core project.
 
 For more information on this file, see
-https://docs.djangoproject.com/en/5.0/topics/settings/
+https://docs.djangoproject.com/en/dev/topics/settings/
 
 For the full list of settings and their values, see
-https://docs.djangoproject.com/en/5.0/ref/settings/
+https://docs.djangoproject.com/en/dev/ref/settings/
 """
 
 from pathlib import Path
@@ -15,7 +15,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
+# See https://docs.djangoproject.com/en/dev/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "example_project.example",
-    "django_owm",
+    "src.django_owm",
 ]
 
 MIDDLEWARE = [
@@ -72,7 +72,7 @@ WSGI_APPLICATION = "example_project.wsgi.application"
 ASGI_APPLICATION = "example_project.asgi.application"
 
 # Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+# https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
 DATABASES = {
     "default": {
@@ -82,7 +82,7 @@ DATABASES = {
 }
 
 # Password validation
-# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
+# https://docs.djangoproject.com/en/dev/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -100,7 +100,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Internationalization
-# https://docs.djangoproject.com/en/5.0/topics/i18n/
+# https://docs.djangoproject.com/en/dev/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
 
@@ -111,11 +111,46 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.0/howto/static-files/
+# https://docs.djangoproject.com/en/dev/howto/static-files/
 
 STATIC_URL = "static/"
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
+# https://docs.djangoproject.com/en/dev/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Logging
+# https://docs.djangoproject.com/en/dev/topics/logging/
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
+    },
+}
+
+# Celery
+# https://docs.celeryproject.org/en/stable/django/
+CELERY_TASK_ALWAYS_EAGER = True
+
+# App settings for the django_owm app.
+DJANGO_OWM = {
+    "OWM_API_KEY": "test_api_key",  # Use a test API key or leave it blank
+    "OWM_MODEL_MAPPINGS": {
+        "WeatherLocation": "example.WeatherLocation",
+        "CurrentWeather": "example.CurrentWeather",
+        "MinutelyWeather": "example.MinutelyWeather",
+        "HourlyWeather": "example.HourlyWeather",
+        "DailyWeather": "example.DailyWeather",
+        "WeatherAlert": "example.WeatherAlert",
+        "WeatherErrorLog": "example.WeatherErrorLog",
+        "APICallLog": "example.APICallLog",
+    },
+}

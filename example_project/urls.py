@@ -1,12 +1,13 @@
-"""URL configuration for core project."""
+"""URL configuration for example project."""
 
 from django.contrib import admin
+from django.urls import include
 from django.urls import path
 
 
 """
 The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.0/topics/http/urls/
+    https://docs.djangoproject.com/en/dev/topics/http/urls/
 Examples:
     Function views
         1. Add an import:  from my_app import views
@@ -22,4 +23,6 @@ Examples:
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("", include("example_project.example.urls")),
+    path("owm/", include("src.django_owm.urls", namespace="django_owm")),
 ]
