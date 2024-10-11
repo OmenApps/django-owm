@@ -3,16 +3,22 @@
 from decimal import Decimal
 
 import pytest
+from django.apps import apps
 from django.utils import timezone
 
 from src.django_owm.app_settings import OWM_MODEL_MAPPINGS
-from src.django_owm.app_settings import get_model_from_string
+
+
+@pytest.fixture
+def weather_location_model():
+    """Return the WeatherLocation model."""
+    return apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
 
 
 @pytest.mark.django_db
-def test_create_weather_location():
+def test_create_weather_location(weather_location_model):
     """Test creating a WeatherLocation object."""
-    WeatherLocation = get_model_from_string(OWM_MODEL_MAPPINGS["WeatherLocation"])  # pylint: disable=C0103
+    WeatherLocation = weather_location_model
     location = WeatherLocation.objects.create(
         name="Test Location", latitude=40.7128, longitude=-74.0060, timezone="America/New_York"
     )
@@ -21,10 +27,10 @@ def test_create_weather_location():
 
 
 @pytest.mark.django_db
-def test_create_current_weather():
+def test_create_current_weather(weather_location_model):
     """Test creating a CurrentWeather object."""
-    WeatherLocation = get_model_from_string(OWM_MODEL_MAPPINGS["WeatherLocation"])  # pylint: disable=C0103
-    CurrentWeather = get_model_from_string(OWM_MODEL_MAPPINGS["CurrentWeather"])  # pylint: disable=C0103
+    WeatherLocation = weather_location_model
+    CurrentWeather = apps.get_model(OWM_MODEL_MAPPINGS.get("CurrentWeather"))
     location = WeatherLocation.objects.create(
         name="Test Location", latitude=40.7128, longitude=-74.0060, timezone="America/New_York"
     )
@@ -55,9 +61,9 @@ def test_create_current_weather():
 
 
 @pytest.mark.django_db
-def test_weather_location_model():
+def test_weather_location_model(weather_location_model):
     """Test the WeatherLocation model."""
-    WeatherLocation = get_model_from_string(OWM_MODEL_MAPPINGS["WeatherLocation"])  # pylint: disable=C0103
+    WeatherLocation = weather_location_model
 
     location = WeatherLocation.objects.create(
         name="Test Location",
@@ -73,10 +79,10 @@ def test_weather_location_model():
 
 
 @pytest.mark.django_db
-def test_weather_alert_model():
+def test_weather_alert_model(weather_location_model):
     """Test the WeatherAlert model."""
-    WeatherLocation = get_model_from_string(OWM_MODEL_MAPPINGS["WeatherLocation"])  # pylint: disable=C0103
-    WeatherAlert = get_model_from_string(OWM_MODEL_MAPPINGS["WeatherAlert"])  # pylint: disable=C0103
+    WeatherLocation = weather_location_model
+    WeatherAlert = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherAlert"))
 
     location = WeatherLocation.objects.create(
         name="Alert Location", latitude=Decimal("10.0"), longitude=Decimal("20.0"), timezone="UTC"
@@ -98,10 +104,10 @@ def test_weather_alert_model():
 
 
 @pytest.mark.django_db
-def test_daily_weather_moon_phase_description():
+def test_daily_weather_moon_phase_description(weather_location_model):
     """Test the moon_phase_description property of DailyWeather model."""
-    DailyWeather = get_model_from_string(OWM_MODEL_MAPPINGS["DailyWeather"])  # pylint: disable=C0103
-    WeatherLocation = get_model_from_string(OWM_MODEL_MAPPINGS["WeatherLocation"])  # pylint: disable=C0103
+    DailyWeather = apps.get_model(OWM_MODEL_MAPPINGS.get("DailyWeather"))
+    WeatherLocation = weather_location_model
 
     location = WeatherLocation.objects.create(name="Test Location", latitude=10.0, longitude=20.0)
 
@@ -133,10 +139,10 @@ def test_daily_weather_moon_phase_description():
 
 
 @pytest.mark.django_db
-def test_weather_alert_manager_active():
+def test_weather_alert_manager_active(weather_location_model):
     """Test the active method of WeatherAlertManager."""
-    WeatherAlert = get_model_from_string(OWM_MODEL_MAPPINGS["WeatherAlert"])  # pylint: disable=C0103
-    WeatherLocation = get_model_from_string(OWM_MODEL_MAPPINGS["WeatherLocation"])  # pylint: disable=C0103
+    WeatherLocation = weather_location_model
+    WeatherAlert = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherAlert"))
 
     location = WeatherLocation.objects.create(name="Test Location", latitude=10.0, longitude=20.0, timezone="UTC")
 

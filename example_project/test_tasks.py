@@ -5,18 +5,24 @@ from decimal import Decimal
 
 import pytest
 import requests
+from django.apps import apps
 
 from src.django_owm.app_settings import OWM_MODEL_MAPPINGS
-from src.django_owm.app_settings import get_model_from_string
 from src.django_owm.tasks import fetch_weather
 
 
+@pytest.fixture
+def weather_location_model():
+    """Return the WeatherLocation model."""
+    return apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
+
+
 @pytest.mark.django_db
-def test_fetch_weather(monkeypatch):
+def test_fetch_weather(weather_location_model, monkeypatch):
     """Test fetching current weather data."""
-    WeatherLocation = get_model_from_string(OWM_MODEL_MAPPINGS["WeatherLocation"])  # pylint: disable=C0103
-    CurrentWeather = get_model_from_string(OWM_MODEL_MAPPINGS["CurrentWeather"])  # pylint: disable=C0103
-    APICallLog = get_model_from_string(OWM_MODEL_MAPPINGS["APICallLog"])  # pylint: disable=C0103
+    WeatherLocation = weather_location_model
+    CurrentWeather = apps.get_model(OWM_MODEL_MAPPINGS.get("CurrentWeather"))
+    APICallLog = apps.get_model(OWM_MODEL_MAPPINGS.get("APICallLog"))
 
     location = WeatherLocation.objects.create(
         name="Test Location", latitude=40.7128, longitude=-74.0060, timezone="America/New_York"
@@ -25,7 +31,7 @@ def test_fetch_weather(monkeypatch):
     def mock_get(url, *args, **kwargs):  # pylint: disable=W0613
         """Mock the requests.get function."""
 
-        class MockResponse:  # pylint: disable=R0903
+        class MockResponse:
             """Mock response object to the requests.get call."""
 
             status_code = 200
@@ -151,10 +157,10 @@ def test_fetch_weather(monkeypatch):
 
 
 @pytest.mark.django_db
-def test_fetch_weather_api_error(monkeypatch):
+def test_fetch_weather_api_error(weather_location_model, monkeypatch):
     """Test that API errors are handled and logged."""
-    WeatherLocation = get_model_from_string(OWM_MODEL_MAPPINGS["WeatherLocation"])  # pylint: disable=C0103
-    WeatherErrorLog = get_model_from_string(OWM_MODEL_MAPPINGS["WeatherErrorLog"])  # pylint: disable=C0103
+    WeatherLocation = weather_location_model
+    WeatherErrorLog = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherErrorLog"))
 
     location = WeatherLocation.objects.create(name="Error Location", latitude=10.0, longitude=20.0, timezone="UTC")
 
@@ -176,9 +182,9 @@ def test_fetch_weather_api_error(monkeypatch):
 
 
 @pytest.mark.django_db
-def test_fetch_weather_no_locations(monkeypatch):
+def test_fetch_weather_no_locations(weather_location_model, monkeypatch):
     """Test that fetch_weather handles no locations gracefully."""
-    WeatherLocation = get_model_from_string(OWM_MODEL_MAPPINGS["WeatherLocation"])  # pylint: disable=C0103
+    WeatherLocation = weather_location_model
     # Ensure there are no locations
     WeatherLocation.objects.all().delete()
 
@@ -199,9 +205,9 @@ def test_fetch_weather_no_locations(monkeypatch):
 
 
 @pytest.mark.django_db
-def test_fetch_weather_exception_handling(monkeypatch, caplog):
+def test_fetch_weather_exception_handling(weather_location_model, monkeypatch):
     """Test that fetch_weather handles exceptions gracefully."""
-    WeatherLocation = get_model_from_string(OWM_MODEL_MAPPINGS["WeatherLocation"])  # pylint: disable=C0103
+    WeatherLocation = weather_location_model
     WeatherLocation.objects.create(name="Exception Location", latitude=10.0, longitude=20.0, timezone="UTC")
 
     def mock_make_api_call(lat, lon):

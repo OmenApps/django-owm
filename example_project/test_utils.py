@@ -2,9 +2,9 @@
 
 import pytest
 import requests
+from django.apps import apps
 
 from src.django_owm.app_settings import OWM_MODEL_MAPPINGS
-from src.django_owm.app_settings import get_model_from_string
 from src.django_owm.utils.api import make_api_call
 from src.django_owm.utils.saving import save_weather_data
 
@@ -21,7 +21,7 @@ def test_make_api_call_success(monkeypatch):
             """Return a test JSON response."""
             return {"data": "test"}
 
-    def mock_get(*args, **kwargs):
+    def mock_get(*args, **kwargs):  # pylint: disable=W0613
         """Mock requests.get to return a successful response."""
         return MockResponse()
 
@@ -31,7 +31,7 @@ def test_make_api_call_success(monkeypatch):
     assert data == {"data": "test"}
 
 
-def test_make_api_call_api_error(monkeypatch, caplog):
+def test_make_api_call_api_error(monkeypatch, caplog):  # pylint: disable=W0613
     """Test that make_api_call handles API errors gracefully."""
 
     class MockResponse:
@@ -43,7 +43,7 @@ def test_make_api_call_api_error(monkeypatch, caplog):
             """Raise an HTTPError."""
             raise requests.HTTPError("500 Server Error")
 
-    def mock_get(*args, **kwargs):
+    def mock_get(*args, **kwargs):  # pylint: disable=W0613
         """Mock requests.get to return an error response."""
         return MockResponse()
 
@@ -54,21 +54,11 @@ def test_make_api_call_api_error(monkeypatch, caplog):
     # assert "Error fetching weather data" in caplog.text
 
 
-# def test_make_api_call_missing_api_key(monkeypatch, caplog):
-#     """Test that make_api_call logs an error when API key is missing."""
-#     # monkeypatch.setattr("src.django_owm.app_settings", "OWM_API_KEY", "")
-#     from example_project import settings as example_project_settings
-#     monkeypatch.setattr(example_project_settings, "OWM_API_KEY", "")
-#     data = make_api_call(10.0, 20.0)
-#     assert data is None
-#     assert "OpenWeatherMap API key not set" in caplog.text
-
-
 @pytest.mark.django_db
 def test_save_weather_data():
     """Test that save_weather_data saves data correctly."""
-    WeatherLocation = get_model_from_string(OWM_MODEL_MAPPINGS["WeatherLocation"])  # pylint: disable=C0103
-    CurrentWeather = get_model_from_string(OWM_MODEL_MAPPINGS["CurrentWeather"])  # pylint: disable=C0103
+    WeatherLocation = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
+    CurrentWeather = apps.get_model(OWM_MODEL_MAPPINGS.get("CurrentWeather"))
 
     location = WeatherLocation.objects.create(name="Test Location", latitude=10.0, longitude=20.0, timezone="UTC")
 

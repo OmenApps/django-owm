@@ -9,8 +9,8 @@ from src.django_owm.app_settings import OWM_MODEL_MAPPINGS
 
 def test_weather_detail_template_rendering():
     """Test that weather_detail template renders correctly."""
-    WeatherLocation = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))  # pylint: disable=C0103
-    CurrentWeather = apps.get_model(OWM_MODEL_MAPPINGS.get("CurrentWeather"))  # pylint: disable=C0103
+    WeatherLocation = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
+    CurrentWeather = apps.get_model(OWM_MODEL_MAPPINGS.get("CurrentWeather"))
 
     location = WeatherLocation(name="Test Location", latitude=10.0, longitude=20.0, timezone="UTC")
     current_weather = CurrentWeather(

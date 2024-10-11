@@ -1,27 +1,19 @@
-"""Test cases for the django-owm package."""
+"""Test cases for the django_owm app."""
 
-import pytest
-from click.testing import CliRunner
 from django.apps import apps
 from django.conf import settings
 
 
-@pytest.fixture
-def runner() -> CliRunner:
-    """Fixture for invoking command-line interfaces."""
-    return CliRunner()
-
-
-def test_succeeds(runner: CliRunner) -> None:
-    """It exits with a status code of zero."""
+def test_succeeds() -> None:
+    """Test that the test suite runs."""
     assert 0 == 0
 
 
-def test_settings(runner: CliRunner) -> None:
-    """It exits with a status code of zero."""
+def test_settings() -> None:
+    """Test that the settings are configured."""
     assert settings.USE_TZ is True
 
 
-def test_apps(runner: CliRunner) -> None:
-    """It exits with a status code of zero."""
+def test_apps() -> None:
+    """Test that the app is configured in the Django project."""
     assert "django_owm" in apps.get_app_config("django_owm").name
