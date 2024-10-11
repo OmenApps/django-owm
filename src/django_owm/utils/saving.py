@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     from ..models import AbstractWeatherLocation
 
 
-def save_weather_data(location: AbstractWeatherLocation, data: Dict[str, Any]):
+def save_weather_data(location: AbstractWeatherLocation, data: Dict[str, Any]) -> None:
     """Save weather data to the database."""
     if data:
         save_current_weather(location, data)
@@ -31,7 +31,7 @@ def save_weather_data(location: AbstractWeatherLocation, data: Dict[str, Any]):
         save_alerts(location, data)
 
 
-def save_current_weather(location: AbstractWeatherLocation, data: Dict[str, Any]):
+def save_current_weather(location: AbstractWeatherLocation, data: Dict[str, Any]) -> None:
     """Save current weather data to the database."""
     CurrentWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("CurrentWeather"))
 
@@ -69,7 +69,7 @@ def save_current_weather(location: AbstractWeatherLocation, data: Dict[str, Any]
     )
 
 
-def save_minutely_weather(location: AbstractWeatherLocation, data: Dict[str, Any]):
+def save_minutely_weather(location: AbstractWeatherLocation, data: Dict[str, Any]) -> None:
     """Save minutely weather data to the database."""
     MinutelyWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("MinutelyWeather"))
 
@@ -90,7 +90,7 @@ def save_minutely_weather(location: AbstractWeatherLocation, data: Dict[str, Any
         )
 
 
-def save_hourly_weather(location: AbstractWeatherLocation, data: Dict[str, Any]):
+def save_hourly_weather(location: AbstractWeatherLocation, data: Dict[str, Any]) -> None:
     """Save hourly weather data to the database."""
     HourlyWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("HourlyWeather"))
 
@@ -129,7 +129,7 @@ def save_hourly_weather(location: AbstractWeatherLocation, data: Dict[str, Any])
         )
 
 
-def save_daily_weather(location: AbstractWeatherLocation, data: Dict[str, Any]):
+def save_daily_weather(location: AbstractWeatherLocation, data: Dict[str, Any]) -> None:
     """Save daily weather data to the database."""
     DailyWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("DailyWeather"))
 
@@ -177,7 +177,7 @@ def save_daily_weather(location: AbstractWeatherLocation, data: Dict[str, Any]):
         )
 
 
-def save_alerts(location: AbstractWeatherLocation, data: Dict[str, Any]):
+def save_alerts(location: AbstractWeatherLocation, data: Dict[str, Any]) -> None:
     """Save weather alerts to the database."""
     WeatherAlertModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherAlert"))
 
@@ -207,7 +207,7 @@ def save_error_log(
     api_name: str,
     error_message: str,
     response_data: Optional[Dict[str, Any]] = None,
-):
+) -> None:
     """Save error log to the database."""
     WeatherErrorLogModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherErrorLog"))
     if not WeatherErrorLogModel:

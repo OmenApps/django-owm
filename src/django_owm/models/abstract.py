@@ -19,7 +19,12 @@ class AbstractWeatherLocation(OWM_BASE_MODEL):
     """Abstract model for storing weather location data."""
 
     if OWM_USE_UUID:
-        uuid = models.UUIDField(primary_key=True, editable=False, unique=True, default=uuid.uuid4)
+        uuid = models.UUIDField(
+            primary_key=True,
+            editable=False,
+            unique=True,
+            default=uuid.uuid4,
+        )
 
     name = models.CharField(
         _("Location Name"),
@@ -68,7 +73,12 @@ class AbstractCurrentWeather(AbstractBaseWeatherData):
     """Abstract model for storing current weather data."""
 
     if OWM_USE_UUID:
-        uuid = models.UUIDField(primary_key=True, editable=False, unique=True, default=uuid.uuid4)
+        uuid = models.UUIDField(
+            primary_key=True,
+            editable=False,
+            unique=True,
+            default=uuid.uuid4,
+        )
 
     sunrise = models.DateTimeField(blank=True, null=True)
     sunset = models.DateTimeField(blank=True, null=True)
@@ -117,7 +127,12 @@ class AbstractMinutelyWeather(OWM_BASE_MODEL):
     """Abstract model for storing minutely weather data."""
 
     if OWM_USE_UUID:
-        uuid = models.UUIDField(primary_key=True, editable=False, unique=True, default=uuid.uuid4)
+        uuid = models.UUIDField(
+            primary_key=True,
+            editable=False,
+            unique=True,
+            default=uuid.uuid4,
+        )
 
     location = models.ForeignKey(
         OWM_MODEL_MAPPINGS["WeatherLocation"],
@@ -148,7 +163,12 @@ class AbstractHourlyWeather(AbstractBaseWeatherData):
     """Abstract model for storing hourly weather data."""
 
     if OWM_USE_UUID:
-        uuid = models.UUIDField(primary_key=True, editable=False, unique=True, default=uuid.uuid4)
+        uuid = models.UUIDField(
+            primary_key=True,
+            editable=False,
+            unique=True,
+            default=uuid.uuid4,
+        )
 
     temp = models.DecimalField(
         _("Temperature"),
@@ -200,7 +220,12 @@ class AbstractDailyWeather(AbstractBaseWeatherData):
     """Abstract model for storing daily weather data."""
 
     if OWM_USE_UUID:
-        uuid = models.UUIDField(primary_key=True, editable=False, unique=True, default=uuid.uuid4)
+        uuid = models.UUIDField(
+            primary_key=True,
+            editable=False,
+            unique=True,
+            default=uuid.uuid4,
+        )
 
     sunrise = models.DateTimeField(blank=True, null=True)
     sunset = models.DateTimeField(blank=True, null=True)
@@ -343,7 +368,12 @@ class AbstractWeatherAlert(OWM_BASE_MODEL):
     """Abstract model for storing weather alerts."""
 
     if OWM_USE_UUID:
-        uuid = models.UUIDField(primary_key=True, editable=False, unique=True, default=uuid.uuid4)
+        uuid = models.UUIDField(
+            primary_key=True,
+            editable=False,
+            unique=True,
+            default=uuid.uuid4,
+        )
 
     location = models.ForeignKey(
         OWM_MODEL_MAPPINGS["WeatherLocation"],
@@ -370,7 +400,12 @@ class AbstractWeatherErrorLog(OWM_BASE_MODEL):
     """Abstract model for storing weather API error logs."""
 
     if OWM_USE_UUID:
-        uuid = models.UUIDField(primary_key=True, editable=False, unique=True, default=uuid.uuid4)
+        uuid = models.UUIDField(
+            primary_key=True,
+            editable=False,
+            unique=True,
+            default=uuid.uuid4,
+        )
 
     timestamp = models.DateTimeField(auto_now_add=True)
     location = models.ForeignKey(
@@ -395,7 +430,12 @@ class AbstractAPICallLog(OWM_BASE_MODEL):
     """Abstract model for storing API call logs."""
 
     if OWM_USE_UUID:
-        uuid = models.UUIDField(primary_key=True, editable=False, unique=True, default=uuid.uuid4)
+        uuid = models.UUIDField(
+            primary_key=True,
+            editable=False,
+            unique=True,
+            default=uuid.uuid4,
+        )
 
     timestamp = models.DateTimeField(auto_now_add=True)
     api_name = models.CharField(max_length=255)

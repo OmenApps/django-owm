@@ -3,8 +3,10 @@
 import logging
 from decimal import Decimal
 from functools import wraps
+from typing import Callable
 from typing import List
 from typing import Optional
+from typing import Tuple
 
 import requests
 from django.apps import apps
@@ -18,7 +20,7 @@ from ..app_settings import OWM_MODEL_MAPPINGS
 logger = logging.getLogger(__name__)
 
 
-def get_api_call_counts(api_name: str):
+def get_api_call_counts(api_name: str) -> Tuple[int, int]:
     """Get the number of API calls made in the last minute and last month."""
     now = timezone.now()
     one_minute_ago = now - timezone.timedelta(minutes=1)
@@ -31,11 +33,11 @@ def get_api_call_counts(api_name: str):
     return calls_last_minute, calls_last_month
 
 
-def check_api_limits(func: callable):
+def check_api_limits(func: Callable) -> Callable:
     """Decorator to check API call limits before running a task."""
 
     @wraps(func)
-    def wrapper(*args, **kwargs):
+    def wrapper(*args, **kwargs) -> Optional[Callable]:
         """Check API call limits before running the task."""
         api_name = "one_call"
         rate_limits = OWM_API_RATE_LIMITS.get(api_name, {})
@@ -52,7 +54,7 @@ def check_api_limits(func: callable):
     return wrapper
 
 
-def log_api_call(api_name: str):
+def log_api_call(api_name: str) -> None:
     """Log an API call to the database."""
     APICallLogModel = apps.get_model(OWM_MODEL_MAPPINGS.get("APICallLog"))
     if APICallLogModel:
@@ -63,7 +65,7 @@ def make_api_call(
     lat: Decimal,
     lon: Decimal,
     exclude: Optional[List[str]] = None,
-):
+) -> Optional[dict]:
     """Make an API call to OpenWeatherMap."""
     api_key = OWM_API_KEY
     if not api_key:
