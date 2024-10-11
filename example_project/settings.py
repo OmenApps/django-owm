@@ -156,4 +156,5 @@ DJANGO_OWM = {
     "OWM_USE_BUILTIN_ADMIN": True,
     "OWM_SHOW_MAP": True,
     "OWM_USE_UUID": False,
+    "OWM_USE_BUILTIN_CONCRETE_MODELS": False,
 }

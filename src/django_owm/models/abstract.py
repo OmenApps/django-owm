@@ -6,6 +6,8 @@ from django.utils.translation import gettext_lazy as _
 from ..app_settings import OWM_BASE_MODEL
 from ..app_settings import OWM_MODEL_MAPPINGS
 from ..app_settings import OWM_USE_UUID
+from ..validators import validate_latitude
+from ..validators import validate_longitude
 from .base import AbstractBaseWeatherData
 
 
@@ -13,7 +15,7 @@ if OWM_USE_UUID:
     import uuid
 
 
-class WeatherLocation(OWM_BASE_MODEL):  # pylint: disable=R0903
+class AbstractWeatherLocation(OWM_BASE_MODEL):
     """Abstract model for storing weather location data."""
 
     if OWM_USE_UUID:
@@ -27,14 +29,16 @@ class WeatherLocation(OWM_BASE_MODEL):  # pylint: disable=R0903
     )
     latitude = models.DecimalField(
         _("Latitude"),
-        max_digits=12,
-        decimal_places=10,
+        max_digits=4,
+        decimal_places=2,
+        validators=[validate_latitude],
         help_text=_("Latitude of the location, decimal (−90; 90)"),
     )
     longitude = models.DecimalField(
         _("Longitude"),
-        max_digits=13,
-        decimal_places=10,
+        max_digits=5,
+        decimal_places=2,
+        validators=[validate_longitude],
         help_text=_("Longitude of the location, decimal (−180; 180)"),
     )
     timezone = models.CharField(
@@ -51,16 +55,16 @@ class WeatherLocation(OWM_BASE_MODEL):  # pylint: disable=R0903
         help_text=_("Offset from UTC in seconds"),
     )
 
-    class Meta(OWM_BASE_MODEL.Meta):  # pylint: disable=R0903
-        """Meta options for the WeatherLocation model."""
+    class Meta(OWM_BASE_MODEL.Meta):
+        """Meta options for the AbstractWeatherLocation model."""
 
         abstract = True
 
     def __str__(self):
-        return str(self.name)
+        return str(self.name) if self.name else f"{self.latitude}, {self.longitude}"
 
 
-class CurrentWeather(AbstractBaseWeatherData):  # pylint: disable=R0903
+class AbstractCurrentWeather(AbstractBaseWeatherData):
     """Abstract model for storing current weather data."""
 
     if OWM_USE_UUID:
@@ -100,8 +104,8 @@ class CurrentWeather(AbstractBaseWeatherData):  # pylint: disable=R0903
         help_text=_("Snowfall in mm/h"),
     )
 
-    class Meta:  # pylint: disable=R0903
-        """Meta options for the CurrentWeather model."""
+    class Meta:
+        """Meta options for the AbstractCurrentWeather model."""
 
         abstract = True
 
@@ -109,7 +113,7 @@ class CurrentWeather(AbstractBaseWeatherData):  # pylint: disable=R0903
         return f"{self.location.name} - {self.timestamp}"
 
 
-class MinutelyWeather(OWM_BASE_MODEL):  # pylint: disable=R0903
+class AbstractMinutelyWeather(OWM_BASE_MODEL):
     """Abstract model for storing minutely weather data."""
 
     if OWM_USE_UUID:
@@ -131,8 +135,8 @@ class MinutelyWeather(OWM_BASE_MODEL):  # pylint: disable=R0903
         decimal_places=2,
     )
 
-    class Meta(OWM_BASE_MODEL.Meta):  # pylint: disable=R0903
-        """Meta options for the MinutelyWeather model."""
+    class Meta(OWM_BASE_MODEL.Meta):
+        """Meta options for the AbstractMinutelyWeather model."""
 
         abstract = True
 
@@ -140,7 +144,7 @@ class MinutelyWeather(OWM_BASE_MODEL):  # pylint: disable=R0903
         return f"{self.location.name} - {self.timestamp}"
 
 
-class HourlyWeather(AbstractBaseWeatherData):  # pylint: disable=R0903
+class AbstractHourlyWeather(AbstractBaseWeatherData):
     """Abstract model for storing hourly weather data."""
 
     if OWM_USE_UUID:
@@ -183,8 +187,8 @@ class HourlyWeather(AbstractBaseWeatherData):  # pylint: disable=R0903
         null=True,
     )
 
-    class Meta:  # pylint: disable=R0903
-        """Meta options for the HourlyWeather model."""
+    class Meta:
+        """Meta options for the AbstractHourlyWeather model."""
 
         abstract = True
 
@@ -192,7 +196,7 @@ class HourlyWeather(AbstractBaseWeatherData):  # pylint: disable=R0903
         return f"{self.location.name} - {self.timestamp}"
 
 
-class DailyWeather(AbstractBaseWeatherData):  # pylint: disable=R0903
+class AbstractDailyWeather(AbstractBaseWeatherData):
     """Abstract model for storing daily weather data."""
 
     if OWM_USE_UUID:
@@ -302,8 +306,8 @@ class DailyWeather(AbstractBaseWeatherData):  # pylint: disable=R0903
         null=True,
     )
 
-    class Meta:  # pylint: disable=R0903
-        """Meta options for the DailyWeather model."""
+    class Meta:
+        """Meta options for the AbstractDailyWeather model."""
 
         abstract = True
 
@@ -335,7 +339,7 @@ class DailyWeather(AbstractBaseWeatherData):  # pylint: disable=R0903
                 return _("Unknown")
 
 
-class WeatherAlert(OWM_BASE_MODEL):  # pylint: disable=R0903
+class AbstractWeatherAlert(OWM_BASE_MODEL):
     """Abstract model for storing weather alerts."""
 
     if OWM_USE_UUID:
@@ -353,8 +357,8 @@ class WeatherAlert(OWM_BASE_MODEL):  # pylint: disable=R0903
     description = models.TextField()
     tags = models.JSONField(default=list, blank=True, null=True)
 
-    class Meta(OWM_BASE_MODEL.Meta):  # pylint: disable=R0903
-        """Meta options for the WeatherAlert model."""
+    class Meta(OWM_BASE_MODEL.Meta):
+        """Meta options for the AbstractWeatherAlert model."""
 
         abstract = True
 
@@ -362,7 +366,7 @@ class WeatherAlert(OWM_BASE_MODEL):  # pylint: disable=R0903
         return f"{self.location.name} - ({self.start} - {self.end})"
 
 
-class WeatherErrorLog(OWM_BASE_MODEL):  # pylint: disable=R0903
+class AbstractWeatherErrorLog(OWM_BASE_MODEL):
     """Abstract model for storing weather API error logs."""
 
     if OWM_USE_UUID:
@@ -378,8 +382,8 @@ class WeatherErrorLog(OWM_BASE_MODEL):  # pylint: disable=R0903
     error_message = models.TextField()
     response_data = models.TextField(blank=True, null=True)
 
-    class Meta(OWM_BASE_MODEL.Meta):  # pylint: disable=R0903
-        """Meta options for the WeatherErrorLog model."""
+    class Meta(OWM_BASE_MODEL.Meta):
+        """Meta options for the AbstractWeatherErrorLog model."""
 
         abstract = True
 
@@ -387,7 +391,7 @@ class WeatherErrorLog(OWM_BASE_MODEL):  # pylint: disable=R0903
         return f"{self.api_name} - {self.timestamp}"
 
 
-class APICallLog(OWM_BASE_MODEL):  # pylint: disable=R0903
+class AbstractAPICallLog(OWM_BASE_MODEL):
     """Abstract model for storing API call logs."""
 
     if OWM_USE_UUID:
@@ -410,8 +414,8 @@ class APICallLog(OWM_BASE_MODEL):  # pylint: disable=R0903
         default=UnitsType.STANDARD,
     )
 
-    class Meta(OWM_BASE_MODEL.Meta):  # pylint: disable=R0903
-        """Meta options for the APICallLog model."""
+    class Meta(OWM_BASE_MODEL.Meta):
+        """Meta options for the AbstractAPICallLog model."""
 
         abstract = True
 

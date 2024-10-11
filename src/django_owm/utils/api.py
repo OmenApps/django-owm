@@ -7,12 +7,12 @@ from typing import List
 from typing import Optional
 
 import requests
+from django.apps import apps
 from django.utils import timezone
 
 from ..app_settings import OWM_API_KEY
 from ..app_settings import OWM_API_RATE_LIMITS
 from ..app_settings import OWM_MODEL_MAPPINGS
-from ..app_settings import get_model_from_string
 
 
 logger = logging.getLogger(__name__)
@@ -23,7 +23,7 @@ def get_api_call_counts(api_name: str):
     now = timezone.now()
     one_minute_ago = now - timezone.timedelta(minutes=1)
     one_month_ago = now - timezone.timedelta(days=30)
-    APICallLogModel = get_model_from_string(OWM_MODEL_MAPPINGS.get("APICallLog"))  # pylint: disable=C0103
+    APICallLogModel = apps.get_model(OWM_MODEL_MAPPINGS.get("APICallLog"))
     if not APICallLogModel:
         return 0, 0
     calls_last_minute = APICallLogModel.objects.filter(api_name=api_name, timestamp__gte=one_minute_ago).count()
@@ -54,7 +54,7 @@ def check_api_limits(func: callable):
 
 def log_api_call(api_name: str):
     """Log an API call to the database."""
-    APICallLogModel = get_model_from_string(OWM_MODEL_MAPPINGS.get("APICallLog"))  # pylint: disable=C0103
+    APICallLogModel = apps.get_model(OWM_MODEL_MAPPINGS.get("APICallLog"))
     if APICallLogModel:
         APICallLogModel.objects.create(api_name=api_name)
 

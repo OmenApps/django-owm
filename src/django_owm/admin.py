@@ -1,21 +1,21 @@
 """Admin for the django_owm app."""
 
+from django.apps import apps
 from django.contrib import admin
 
 from .app_settings import OWM_MODEL_MAPPINGS
 from .app_settings import OWM_USE_BUILTIN_ADMIN
-from .app_settings import get_model_from_string
 
 
 if OWM_USE_BUILTIN_ADMIN:
-    WeatherLocationModel = get_model_from_string(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
-    CurrentWeatherModel = get_model_from_string(OWM_MODEL_MAPPINGS.get("CurrentWeather"))
-    MinutelyWeatherModel = get_model_from_string(OWM_MODEL_MAPPINGS.get("MinutelyWeather"))
-    HourlyWeatherModel = get_model_from_string(OWM_MODEL_MAPPINGS.get("HourlyWeather"))
-    DailyWeatherModel = get_model_from_string(OWM_MODEL_MAPPINGS.get("DailyWeather"))
-    WeatherAlertModel = get_model_from_string(OWM_MODEL_MAPPINGS.get("WeatherAlert"))
-    WeatherErrorLogModel = get_model_from_string(OWM_MODEL_MAPPINGS.get("WeatherErrorLog"))
-    APICallLogModel = get_model_from_string(OWM_MODEL_MAPPINGS.get("APICallLog"))
+    WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
+    CurrentWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("CurrentWeather"))
+    MinutelyWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("MinutelyWeather"))
+    HourlyWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("HourlyWeather"))
+    DailyWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("DailyWeather"))
+    WeatherAlertModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherAlert"))
+    WeatherErrorLogModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherErrorLog"))
+    APICallLogModel = apps.get_model(OWM_MODEL_MAPPINGS.get("APICallLog"))
 
     if WeatherLocationModel:
 

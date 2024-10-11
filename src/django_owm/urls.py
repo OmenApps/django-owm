@@ -6,7 +6,7 @@ from . import views
 from .app_settings import OWM_USE_UUID
 
 
-app_name = "django_owm"  # pylint: disable=C0103
+app_name = "django_owm"
 
 if OWM_USE_UUID:
     urlpatterns = [

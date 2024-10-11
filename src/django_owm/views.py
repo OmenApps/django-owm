@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 def list_locations(request):
     """View to display a list of all weather locations with an optional map."""
-    WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))  # pylint: disable=C0103
+    WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
     locations = WeatherLocationModel.objects.all()
     show_map = OWM_SHOW_MAP
     context = {
@@ -48,7 +48,7 @@ def create_location(request):
 
 def delete_location(request, location_id: Union[int, uuid.UUID]):
     """View to delete a weather location."""
-    WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))  # pylint: disable=C0103
+    WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
 
     if OWM_USE_UUID:
         location = get_object_or_404(WeatherLocationModel, uuid=location_id)
@@ -67,7 +67,7 @@ def delete_location(request, location_id: Union[int, uuid.UUID]):
 
 def update_location(request, location_id: Union[int, uuid.UUID]):
     """View to update a weather location."""
-    WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))  # pylint: disable=C0103
+    WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
 
     if OWM_USE_UUID:
         location = get_object_or_404(WeatherLocationModel, uuid=location_id)
@@ -91,8 +91,8 @@ def update_location(request, location_id: Union[int, uuid.UUID]):
 def weather_detail(request, location_id: Union[int, uuid.UUID]):
     """View to display the weather details for a location."""
     model_mappings = OWM_MODEL_MAPPINGS
-    WeatherLocationModel = apps.get_model(model_mappings.get("WeatherLocation"))  # pylint: disable=C0103
-    CurrentWeatherModel = apps.get_model(model_mappings.get("CurrentWeather"))  # pylint: disable=C0103
+    WeatherLocationModel = apps.get_model(model_mappings.get("WeatherLocation"))
+    CurrentWeatherModel = apps.get_model(model_mappings.get("CurrentWeather"))
 
     if OWM_USE_UUID:
         location = get_object_or_404(WeatherLocationModel, uuid=location_id)
@@ -112,8 +112,8 @@ def weather_detail(request, location_id: Union[int, uuid.UUID]):
 
 def weather_history(request, location_id: Union[int, uuid.UUID]):
     """View to display historical weather data for a location."""
-    WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))  # pylint: disable=C0103
-    CurrentWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("CurrentWeather"))  # pylint: disable=C0103
+    WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
+    CurrentWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("CurrentWeather"))
 
     if OWM_USE_UUID:
         location = get_object_or_404(WeatherLocationModel, uuid=location_id)
@@ -132,9 +132,9 @@ def weather_history(request, location_id: Union[int, uuid.UUID]):
 
 def weather_forecast(request, location_id: Union[int, uuid.UUID]):
     """View to display weather forecast for a location."""
-    WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))  # pylint: disable=C0103
-    HourlyWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("HourlyWeather"))  # pylint: disable=C0103
-    DailyWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("DailyWeather"))  # pylint: disable=C0103
+    WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
+    HourlyWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("HourlyWeather"))
+    DailyWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("DailyWeather"))
 
     if OWM_USE_UUID:
         location = get_object_or_404(WeatherLocationModel, uuid=location_id)
@@ -159,8 +159,8 @@ def weather_forecast(request, location_id: Union[int, uuid.UUID]):
 
 def weather_alerts(request, location_id: Union[int, uuid.UUID]):
     """View to display weather alerts for a location."""
-    WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))  # pylint: disable=C0103
-    WeatherAlertModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherAlert"))  # pylint: disable=C0103
+    WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
+    WeatherAlertModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherAlert"))
 
     if OWM_USE_UUID:
         location = get_object_or_404(WeatherLocationModel, uuid=location_id)
@@ -179,8 +179,8 @@ def weather_alerts(request, location_id: Union[int, uuid.UUID]):
 
 def weather_errors(request, location_id: Union[int, uuid.UUID]):
     """View to display weather errors for a location."""
-    WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))  # pylint: disable=C0103
-    WeatherErrorLogModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherErrorLog"))  # pylint: disable=C0103
+    WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
+    WeatherErrorLogModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherErrorLog"))
 
     if OWM_USE_UUID:
         location = get_object_or_404(WeatherLocationModel, uuid=location_id)

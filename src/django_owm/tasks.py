@@ -3,10 +3,10 @@
 import logging
 
 from celery import shared_task
+from django.apps import apps
 
 from .app_settings import OWM_API_RATE_LIMITS
 from .app_settings import OWM_MODEL_MAPPINGS
-from .app_settings import get_model_from_string
 from .utils.api import check_api_limits
 from .utils.api import get_api_call_counts
 from .utils.api import log_api_call
@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 @check_api_limits
 def fetch_weather(location_ids=None):
     """Fetch current weather data for all locations."""
-    WeatherLocationModel = get_model_from_string(OWM_MODEL_MAPPINGS.get("WeatherLocation"))  # pylint: disable=C0103
+    WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
 
     if location_ids is not None:
         locations = WeatherLocationModel.objects.filter(id__in=location_ids)

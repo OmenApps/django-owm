@@ -7,7 +7,7 @@ from ..app_settings import OWM_BASE_MODEL
 from ..app_settings import OWM_MODEL_MAPPINGS
 
 
-class AbstractBaseWeatherData(OWM_BASE_MODEL):  # pylint: disable=R0903
+class AbstractBaseWeatherData(OWM_BASE_MODEL):
     """Abstract base model for storing weather data. Not intended to be used directly."""
 
     location = models.ForeignKey(
@@ -58,7 +58,7 @@ class AbstractBaseWeatherData(OWM_BASE_MODEL):  # pylint: disable=R0903
     weather_condition_description = models.CharField(max_length=255, help_text=_("Icon description"))
     weather_condition_icon = models.CharField(max_length=10)
 
-    class Meta(OWM_BASE_MODEL.Meta):  # pylint: disable=R0903
+    class Meta(OWM_BASE_MODEL.Meta):
         """Meta options for the WeatherData model."""
 
         abstract = True

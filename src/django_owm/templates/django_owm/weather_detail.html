@@ -7,6 +7,11 @@
     <h1 class="mb-4">{% trans 'Weather for' %} {{ location.name }}</h1>
     <h3>({{ location.latitude }}, {{ location.longitude }})</h3>
 
+    <div>
+        <a href="{% url 'django_owm:update_location' location.id %}" class="btn btn-primary me-2">{% trans 'Update Location' %}</a>
+        <a href="{% url 'django_owm:delete_location' location.id %}" class="btn btn-primary me-2">{% trans 'Delete Location' %}</a>
+    </div>
+
     {% if show_map %}
         <div id="map" style="height: 400px;"></div>
     {% endif %}

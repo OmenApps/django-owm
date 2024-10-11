@@ -1,42 +1,42 @@
 """Models for testing the django_owm app."""
 
-from src.django_owm.models import APICallLog as AbstractAPICallLog
-from src.django_owm.models import CurrentWeather as AbstractCurrentWeather
-from src.django_owm.models import DailyWeather as AbstractDailyWeather
-from src.django_owm.models import HourlyWeather as AbstractHourlyWeather
-from src.django_owm.models import MinutelyWeather as AbstractMinutelyWeather
-from src.django_owm.models import WeatherAlert as AbstractWeatherAlert
-from src.django_owm.models import WeatherErrorLog as AbstractWeatherErrorLog
-from src.django_owm.models import WeatherLocation as AbstractWeatherLocation
+from src.django_owm.models import AbstractAPICallLog
+from src.django_owm.models import AbstractCurrentWeather
+from src.django_owm.models import AbstractDailyWeather
+from src.django_owm.models import AbstractHourlyWeather
+from src.django_owm.models import AbstractMinutelyWeather
+from src.django_owm.models import AbstractWeatherAlert
+from src.django_owm.models import AbstractWeatherErrorLog
+from src.django_owm.models import AbstractWeatherLocation
 
 
-class WeatherLocation(AbstractWeatherLocation):  # pylint: disable=R0903
+class WeatherLocation(AbstractWeatherLocation):
     """Concrete model for WeatherLocation."""
 
 
-class CurrentWeather(AbstractCurrentWeather):  # pylint: disable=R0903
-    """Concrete model for CurrentWeather."""
+class CurrentWeather(AbstractCurrentWeather):
+    """Concrete model for AbstractCurrentWeather."""
 
 
-class MinutelyWeather(AbstractMinutelyWeather):  # pylint: disable=R0903
-    """Concrete model for MinutelyWeather."""
+class MinutelyWeather(AbstractMinutelyWeather):
+    """Concrete model for AbstractMinutelyWeather."""
 
 
-class HourlyWeather(AbstractHourlyWeather):  # pylint: disable=R0903
-    """Concrete model for HourlyWeather."""
+class HourlyWeather(AbstractHourlyWeather):
+    """Concrete model for AbstractHourlyWeather."""
 
 
-class DailyWeather(AbstractDailyWeather):  # pylint: disable=R0903
-    """Concrete model for DailyWeather."""
+class DailyWeather(AbstractDailyWeather):
+    """Concrete model for AbstractDailyWeather."""
 
 
-class WeatherAlert(AbstractWeatherAlert):  # pylint: disable=R0903
-    """Concrete model for WeatherAlert."""
+class WeatherAlert(AbstractWeatherAlert):
+    """Concrete model for AbstractWeatherAlert."""
 
 
-class WeatherErrorLog(AbstractWeatherErrorLog):  # pylint: disable=R0903
-    """Concrete model for WeatherErrorLog."""
+class WeatherErrorLog(AbstractWeatherErrorLog):
+    """Concrete model for AbstractWeatherErrorLog."""
 
 
-class APICallLog(AbstractAPICallLog):  # pylint: disable=R0903
-    """Concrete model for APICallLog."""
+class APICallLog(AbstractAPICallLog):
+    """Concrete model for AbstractAPICallLog."""

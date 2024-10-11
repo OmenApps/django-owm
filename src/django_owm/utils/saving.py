@@ -9,19 +9,19 @@ from typing import Any
 from typing import Dict
 from typing import Optional
 
+from django.apps import apps
 from django.utils import timezone
 
 from ..app_settings import OWM_MODEL_MAPPINGS
-from ..app_settings import get_model_from_string
 
 
 logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
-    from ..models import WeatherLocation
+    from ..models import AbstractWeatherLocation
 
 
-def save_weather_data(location: WeatherLocation, data: Dict[str, Any]):
+def save_weather_data(location: AbstractWeatherLocation, data: Dict[str, Any]):
     """Save weather data to the database."""
     if data:
         save_current_weather(location, data)
@@ -31,10 +31,9 @@ def save_weather_data(location: WeatherLocation, data: Dict[str, Any]):
         save_alerts(location, data)
 
 
-def save_current_weather(location: WeatherLocation, data: Dict[str, Any]):
+def save_current_weather(location: AbstractWeatherLocation, data: Dict[str, Any]):
     """Save current weather data to the database."""
-    model_mappings = OWM_MODEL_MAPPINGS
-    CurrentWeatherModel = get_model_from_string(model_mappings.get("CurrentWeather"))  # pylint: disable=C0103
+    CurrentWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("CurrentWeather"))
 
     if not CurrentWeatherModel:
         logger.error("CurrentWeatherModel is not configured.")
@@ -70,10 +69,9 @@ def save_current_weather(location: WeatherLocation, data: Dict[str, Any]):
     )
 
 
-def save_minutely_weather(location: WeatherLocation, data: Dict[str, Any]):
+def save_minutely_weather(location: AbstractWeatherLocation, data: Dict[str, Any]):
     """Save minutely weather data to the database."""
-    model_mappings = OWM_MODEL_MAPPINGS
-    MinutelyWeatherModel = get_model_from_string(model_mappings.get("MinutelyWeather"))  # pylint: disable=C0103
+    MinutelyWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("MinutelyWeather"))
 
     if not MinutelyWeatherModel:
         logger.error("MinutelyWeatherModel is not configured.")
@@ -92,10 +90,9 @@ def save_minutely_weather(location: WeatherLocation, data: Dict[str, Any]):
         )
 
 
-def save_hourly_weather(location: WeatherLocation, data: Dict[str, Any]):
+def save_hourly_weather(location: AbstractWeatherLocation, data: Dict[str, Any]):
     """Save hourly weather data to the database."""
-    model_mappings = OWM_MODEL_MAPPINGS
-    HourlyWeatherModel = get_model_from_string(model_mappings.get("HourlyWeather"))  # pylint: disable=C0103
+    HourlyWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("HourlyWeather"))
 
     if not HourlyWeatherModel:
         logger.error("HourlyWeatherModel is not configured.")
@@ -132,10 +129,9 @@ def save_hourly_weather(location: WeatherLocation, data: Dict[str, Any]):
         )
 
 
-def save_daily_weather(location: WeatherLocation, data: Dict[str, Any]):
+def save_daily_weather(location: AbstractWeatherLocation, data: Dict[str, Any]):
     """Save daily weather data to the database."""
-    model_mappings = OWM_MODEL_MAPPINGS
-    DailyWeatherModel = get_model_from_string(model_mappings.get("DailyWeather"))  # pylint: disable=C0103
+    DailyWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("DailyWeather"))
 
     if not DailyWeatherModel:
         logger.error("DailyWeatherModel is not configured.")
@@ -181,10 +177,9 @@ def save_daily_weather(location: WeatherLocation, data: Dict[str, Any]):
         )
 
 
-def save_alerts(location: WeatherLocation, data: Dict[str, Any]):
+def save_alerts(location: AbstractWeatherLocation, data: Dict[str, Any]):
     """Save weather alerts to the database."""
-    model_mappings = OWM_MODEL_MAPPINGS
-    WeatherAlertModel = get_model_from_string(model_mappings.get("WeatherAlert"))  # pylint: disable=C0103
+    WeatherAlertModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherAlert"))
 
     if not WeatherAlertModel:
         logger.error("WeatherAlertModel is not configured.")
@@ -208,13 +203,13 @@ def save_alerts(location: WeatherLocation, data: Dict[str, Any]):
 
 
 def save_error_log(
-    location: WeatherLocation,
+    location: AbstractWeatherLocation,
     api_name: str,
     error_message: str,
     response_data: Optional[Dict[str, Any]] = None,
 ):
     """Save error log to the database."""
-    WeatherErrorLogModel = get_model_from_string(OWM_MODEL_MAPPINGS.get("WeatherErrorLog"))  # pylint: disable=C0103
+    WeatherErrorLogModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherErrorLog"))
     if not WeatherErrorLogModel:
         logger.error("WeatherErrorLogModel is not configured.")
         return
