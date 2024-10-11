@@ -17,7 +17,7 @@ if OWM_USE_BUILTIN_ADMIN:
     WeatherErrorLogModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherErrorLog"))
     APICallLogModel = apps.get_model(OWM_MODEL_MAPPINGS.get("APICallLog"))
 
-    if WeatherLocationModel:
+    if WeatherLocationModel and not admin.site.is_registered(WeatherLocationModel):
 
         @admin.register(WeatherLocationModel)
         class WeatherLocationAdmin(admin.ModelAdmin):
@@ -25,7 +25,7 @@ if OWM_USE_BUILTIN_ADMIN:
 
             list_display = ("name", "latitude", "longitude", "timezone")
 
-    if CurrentWeatherModel:
+    if CurrentWeatherModel and not admin.site.is_registered(CurrentWeatherModel):
 
         @admin.register(CurrentWeatherModel)
         class CurrentWeatherAdmin(admin.ModelAdmin):
@@ -33,7 +33,7 @@ if OWM_USE_BUILTIN_ADMIN:
 
             list_display = ("location", "timestamp", "temp", "feels_like", "pressure", "humidity")
 
-    if MinutelyWeatherModel:
+    if MinutelyWeatherModel and not admin.site.is_registered(MinutelyWeatherModel):
 
         @admin.register(MinutelyWeatherModel)
         class MinutelyWeatherAdmin(admin.ModelAdmin):
@@ -41,7 +41,7 @@ if OWM_USE_BUILTIN_ADMIN:
 
             list_display = ("timestamp", "precipitation")
 
-    if HourlyWeatherModel:
+    if HourlyWeatherModel and not admin.site.is_registered(HourlyWeatherModel):
 
         @admin.register(HourlyWeatherModel)
         class HourlyWeatherAdmin(admin.ModelAdmin):
@@ -49,7 +49,7 @@ if OWM_USE_BUILTIN_ADMIN:
 
             list_display = ("timestamp", "temp", "feels_like", "pressure", "humidity")
 
-    if DailyWeatherModel:
+    if DailyWeatherModel and not admin.site.is_registered(DailyWeatherModel):
 
         @admin.register(DailyWeatherModel)
         class DailyWeatherAdmin(admin.ModelAdmin):
@@ -57,7 +57,7 @@ if OWM_USE_BUILTIN_ADMIN:
 
             list_display = ("timestamp", "pressure", "humidity")
 
-    if WeatherAlertModel:
+    if WeatherAlertModel and not admin.site.is_registered(WeatherAlertModel):
 
         @admin.register(WeatherAlertModel)
         class WeatherAlertAdmin(admin.ModelAdmin):
@@ -65,7 +65,7 @@ if OWM_USE_BUILTIN_ADMIN:
 
             list_display = ("sender_name", "event", "start", "end")
 
-    if WeatherErrorLogModel:
+    if WeatherErrorLogModel and not admin.site.is_registered(WeatherErrorLogModel):
 
         @admin.register(WeatherErrorLogModel)
         class WeatherErrorLogAdmin(admin.ModelAdmin):
@@ -73,7 +73,7 @@ if OWM_USE_BUILTIN_ADMIN:
 
             list_display = ("timestamp", "location", "api_name", "error_message")
 
-    if APICallLogModel:
+    if APICallLogModel and not admin.site.is_registered(APICallLogModel):
 
         @admin.register(APICallLogModel)
         class APICallLogAdmin(admin.ModelAdmin):
