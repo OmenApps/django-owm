@@ -153,4 +153,7 @@ DJANGO_OWM = {
         "WeatherErrorLog": "example.WeatherErrorLog",
         "APICallLog": "example.APICallLog",
     },
+    "OWM_USE_BUILTIN_ADMIN": True,
+    "OWM_SHOW_MAP": True,
+    "OWM_USE_UUID": False,
 }

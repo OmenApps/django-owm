@@ -4,6 +4,7 @@ import json
 from decimal import Decimal
 
 import pytest
+import requests
 
 from src.django_owm.app_settings import OWM_MODEL_MAPPINGS
 from src.django_owm.app_settings import get_model_from_string
@@ -147,3 +148,67 @@ def test_fetch_weather(monkeypatch):
 
     # Check that API call log was created
     assert APICallLog.objects.count() == 1
+
+
+@pytest.mark.django_db
+def test_fetch_weather_api_error(monkeypatch):
+    """Test that API errors are handled and logged."""
+    WeatherLocation = get_model_from_string(OWM_MODEL_MAPPINGS["WeatherLocation"])  # pylint: disable=C0103
+    WeatherErrorLog = get_model_from_string(OWM_MODEL_MAPPINGS["WeatherErrorLog"])  # pylint: disable=C0103
+
+    location = WeatherLocation.objects.create(name="Error Location", latitude=10.0, longitude=20.0, timezone="UTC")
+
+    # Mock the API call to raise an exception
+    def mock_make_api_call(lat, lon):
+        raise requests.RequestException("API error")
+
+    monkeypatch.setattr("src.django_owm.tasks.make_api_call", mock_make_api_call)
+
+    with pytest.raises(requests.RequestException) as exc_info:
+        fetch_weather()
+
+        # Verify that an error was logged
+        assert "API error" in str(exc_info.value)
+        assert WeatherErrorLog.objects.count() == 1
+        error_log = WeatherErrorLog.objects.first()
+        assert error_log.location == location
+        assert error_log.error_message == "Failed to fetch weather data"
+
+
+@pytest.mark.django_db
+def test_fetch_weather_no_locations(monkeypatch):
+    """Test that fetch_weather handles no locations gracefully."""
+    WeatherLocation = get_model_from_string(OWM_MODEL_MAPPINGS["WeatherLocation"])  # pylint: disable=C0103
+    # Ensure there are no locations
+    WeatherLocation.objects.all().delete()
+
+    # Use a flag to check if make_api_call is called
+    api_call_called = False
+
+    def mock_make_api_call(lat, lon):  # pylint: disable=W0613
+        nonlocal api_call_called
+        api_call_called = True
+        return {}
+
+    monkeypatch.setattr("src.django_owm.tasks.make_api_call", mock_make_api_call)
+
+    fetch_weather()
+
+    # Ensure that the API was not called
+    assert not api_call_called
+
+
+@pytest.mark.django_db
+def test_fetch_weather_exception_handling(monkeypatch, caplog):
+    """Test that fetch_weather handles exceptions gracefully."""
+    WeatherLocation = get_model_from_string(OWM_MODEL_MAPPINGS["WeatherLocation"])  # pylint: disable=C0103
+    WeatherLocation.objects.create(name="Exception Location", latitude=10.0, longitude=20.0, timezone="UTC")
+
+    def mock_make_api_call(lat, lon):
+        raise Exception("Test exception")  # pylint: disable=W0719
+
+    monkeypatch.setattr("src.django_owm.tasks.make_api_call", mock_make_api_call)
+
+    with pytest.raises(Exception) as exc_info:
+        fetch_weather()
+        assert "Test exception" in str(exc_info.value)
