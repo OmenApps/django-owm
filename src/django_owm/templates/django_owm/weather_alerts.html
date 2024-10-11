@@ -1,0 +1,16 @@
+{% extends "django_owm/base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+    <h1>{% trans 'Weather Alerts for' %} {{ location.name }}</h1>
+    {% for alert in alerts %}
+        <div class="alert alert-warning">
+            <h4>{{ alert.event }}</h4>
+            <p><strong>{% trans 'From' %}:</strong> {{ alert.start }} <strong>{% trans 'To' %}:</strong> {{ alert.end }}</p>
+            <p>{{ alert.description }}</p>
+        </div>
+    {% empty %}
+        <p>{% trans 'No weather alerts at this time' %}</p>
+    {% endfor %}
+{% endblock %}

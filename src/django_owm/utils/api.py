@@ -3,6 +3,8 @@
 import logging
 from decimal import Decimal
 from functools import wraps
+from typing import List
+from typing import Optional
 
 import requests
 from django.utils import timezone
@@ -16,7 +18,7 @@ from ..app_settings import get_model_from_string
 logger = logging.getLogger(__name__)
 
 
-def get_api_call_counts(api_name):
+def get_api_call_counts(api_name: str):
     """Get the number of API calls made in the last minute and last month."""
     now = timezone.now()
     one_minute_ago = now - timezone.timedelta(minutes=1)
@@ -29,7 +31,7 @@ def get_api_call_counts(api_name):
     return calls_last_minute, calls_last_month
 
 
-def check_api_limits(func):
+def check_api_limits(func: callable):
     """Decorator to check API call limits before running a task."""
 
     @wraps(func)
@@ -50,35 +52,43 @@ def check_api_limits(func):
     return wrapper
 
 
-def log_api_call(api_name):
+def log_api_call(api_name: str):
     """Log an API call to the database."""
     APICallLogModel = get_model_from_string(OWM_MODEL_MAPPINGS.get("APICallLog"))  # pylint: disable=C0103
     if APICallLogModel:
         APICallLogModel.objects.create(api_name=api_name)
 
 
-def make_api_call(lat, lon):
+def make_api_call(
+    lat: Decimal,
+    lon: Decimal,
+    exclude: Optional[List[str]] = None,
+):
     """Make an API call to OpenWeatherMap."""
     api_key = OWM_API_KEY
     if not api_key:
         logger.error("OpenWeatherMap API key not set. Please set OWM_API_KEY in your settings.")
         return None
 
-    url = (
-        "https://api.openweathermap.org/data/3.0/onecall?"
-        f"lat={lat}&lon={lon}&exclude=minutely,hourly,daily,alerts&appid={api_key}"
-    )
-    try:
-        # response = requests.get(url, timeout=10)
-        # response.raise_for_status()
-        # return response.json()
+    exclude = ""
+    if exclude is not None:
+        exclude = ",".join(exclude)
 
+    url = "https://api.openweathermap.org/data/3.0/onecall?" f"lat={lat}&lon={lon}&exclude={exclude}&appid={api_key}"
+    try:
         response = requests.get(url, timeout=10)
         if response.status_code == 200:
             try:
-                data = response.json()
+                if hasattr(response, "json"):
+                    data = response.json()
+                elif hasattr(response, "json_response"):
+                    data = response.json_response()
+                else:
+                    raise AttributeError("Response object has no 'json' or 'json_response' attribute.")
             except AttributeError as e:
-                data = response.json_response()
+                logger.exception("Error parsing JSON response: %s", e)
+                return None
+
             # Convert relevant float values to Decimal
             current = data.get("current", {})
             for key in ["temp", "feels_like", "dew_point", "uvi", "wind_speed", "wind_gust"]:

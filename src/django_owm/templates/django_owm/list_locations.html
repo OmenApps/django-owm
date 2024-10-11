@@ -1,0 +1,45 @@
+{% extends "django_owm/base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+    <h1>{% trans 'Weather Locations' %}</h1>
+
+    {% if show_map %}
+        <div id="map" style="height: 400px;"></div>
+    {% endif %}
+    <ul>
+        {% for location in locations %}
+            <li>
+                <a href="{% url 'django_owm:weather_detail' location.id %}">
+                    {{ location.name }} ({{ location.latitude }}, {{ location.longitude }})
+                </a>
+            </li>
+        {% empty %}
+            <li>{% trans 'No locations available' %}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+{% block js %}
+    {% if show_map %}
+        <script>
+            var map = L.map('map').setView([0, 0], 2);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors',
+            }).addTo(map);
+
+            var bounds = [];
+
+            {% for location in locations %}
+                var marker = L.marker([{{ location.latitude }}, {{ location.longitude }}]).addTo(map)
+                    .bindPopup("<a href='{% url 'django_owm:weather_detail' location.id %}'>{{ location.name }}</a>");
+                bounds.push([{{ location.latitude }}, {{ location.longitude }}]);
+            {% endfor %}
+
+            if (bounds.length > 0) {
+                map.fitBounds(bounds);
+            }
+        </script>
+    {% endif %}
+{% endblock %}

@@ -1,7 +1,13 @@
 """Utility functions for saving weather data to the database."""
 
+from __future__ import annotations
+
 import datetime
 import logging
+from typing import TYPE_CHECKING
+from typing import Any
+from typing import Dict
+from typing import Optional
 
 from django.utils import timezone
 
@@ -11,8 +17,11 @@ from ..app_settings import get_model_from_string
 
 logger = logging.getLogger(__name__)
 
+if TYPE_CHECKING:
+    from ..models import WeatherLocation
 
-def save_weather_data(location, data):
+
+def save_weather_data(location: WeatherLocation, data: Dict[str, Any]):
     """Save weather data to the database."""
     if data:
         save_current_weather(location, data)
@@ -22,7 +31,7 @@ def save_weather_data(location, data):
         save_alerts(location, data)
 
 
-def save_current_weather(location, data):
+def save_current_weather(location: WeatherLocation, data: Dict[str, Any]):
     """Save current weather data to the database."""
     model_mappings = OWM_MODEL_MAPPINGS
     CurrentWeatherModel = get_model_from_string(model_mappings.get("CurrentWeather"))  # pylint: disable=C0103
@@ -61,7 +70,7 @@ def save_current_weather(location, data):
     )
 
 
-def save_minutely_weather(location, data):
+def save_minutely_weather(location: WeatherLocation, data: Dict[str, Any]):
     """Save minutely weather data to the database."""
     model_mappings = OWM_MODEL_MAPPINGS
     MinutelyWeatherModel = get_model_from_string(model_mappings.get("MinutelyWeather"))  # pylint: disable=C0103
@@ -83,7 +92,7 @@ def save_minutely_weather(location, data):
         )
 
 
-def save_hourly_weather(location, data):
+def save_hourly_weather(location: WeatherLocation, data: Dict[str, Any]):
     """Save hourly weather data to the database."""
     model_mappings = OWM_MODEL_MAPPINGS
     HourlyWeatherModel = get_model_from_string(model_mappings.get("HourlyWeather"))  # pylint: disable=C0103
@@ -123,7 +132,7 @@ def save_hourly_weather(location, data):
         )
 
 
-def save_daily_weather(location, data):
+def save_daily_weather(location: WeatherLocation, data: Dict[str, Any]):
     """Save daily weather data to the database."""
     model_mappings = OWM_MODEL_MAPPINGS
     DailyWeatherModel = get_model_from_string(model_mappings.get("DailyWeather"))  # pylint: disable=C0103
@@ -172,7 +181,7 @@ def save_daily_weather(location, data):
         )
 
 
-def save_alerts(location, data):
+def save_alerts(location: WeatherLocation, data: Dict[str, Any]):
     """Save weather alerts to the database."""
     model_mappings = OWM_MODEL_MAPPINGS
     WeatherAlertModel = get_model_from_string(model_mappings.get("WeatherAlert"))  # pylint: disable=C0103
@@ -198,7 +207,12 @@ def save_alerts(location, data):
         )
 
 
-def save_error_log(location, api_name, error_message, response_data=None):
+def save_error_log(
+    location: WeatherLocation,
+    api_name: str,
+    error_message: str,
+    response_data: Optional[Dict[str, Any]] = None,
+):
     """Save error log to the database."""
     WeatherErrorLogModel = get_model_from_string(OWM_MODEL_MAPPINGS.get("WeatherErrorLog"))  # pylint: disable=C0103
     if not WeatherErrorLogModel:

@@ -5,11 +5,19 @@ from django.utils.translation import gettext_lazy as _
 
 from ..app_settings import OWM_BASE_MODEL
 from ..app_settings import OWM_MODEL_MAPPINGS
+from ..app_settings import OWM_USE_UUID
 from .base import AbstractBaseWeatherData
+
+
+if OWM_USE_UUID:
+    import uuid
 
 
 class WeatherLocation(OWM_BASE_MODEL):  # pylint: disable=R0903
     """Abstract model for storing weather location data."""
+
+    if OWM_USE_UUID:
+        uuid = models.UUIDField(primary_key=True, editable=False, unique=True, default=uuid.uuid4)
 
     name = models.CharField(
         _("Location Name"),
@@ -19,14 +27,14 @@ class WeatherLocation(OWM_BASE_MODEL):  # pylint: disable=R0903
     )
     latitude = models.DecimalField(
         _("Latitude"),
-        max_digits=5,
-        decimal_places=2,
+        max_digits=12,
+        decimal_places=10,
         help_text=_("Latitude of the location, decimal (−90; 90)"),
     )
     longitude = models.DecimalField(
         _("Longitude"),
-        max_digits=5,
-        decimal_places=2,
+        max_digits=13,
+        decimal_places=10,
         help_text=_("Longitude of the location, decimal (−180; 180)"),
     )
     timezone = models.CharField(
@@ -48,9 +56,15 @@ class WeatherLocation(OWM_BASE_MODEL):  # pylint: disable=R0903
 
         abstract = True
 
+    def __str__(self):
+        return str(self.name)
+
 
 class CurrentWeather(AbstractBaseWeatherData):  # pylint: disable=R0903
     """Abstract model for storing current weather data."""
+
+    if OWM_USE_UUID:
+        uuid = models.UUIDField(primary_key=True, editable=False, unique=True, default=uuid.uuid4)
 
     sunrise = models.DateTimeField(blank=True, null=True)
     sunset = models.DateTimeField(blank=True, null=True)
@@ -91,9 +105,15 @@ class CurrentWeather(AbstractBaseWeatherData):  # pylint: disable=R0903
 
         abstract = True
 
+    def __str__(self):
+        return f"{self.location.name} - {self.timestamp}"
+
 
 class MinutelyWeather(OWM_BASE_MODEL):  # pylint: disable=R0903
     """Abstract model for storing minutely weather data."""
+
+    if OWM_USE_UUID:
+        uuid = models.UUIDField(primary_key=True, editable=False, unique=True, default=uuid.uuid4)
 
     location = models.ForeignKey(
         OWM_MODEL_MAPPINGS["WeatherLocation"],
@@ -116,9 +136,15 @@ class MinutelyWeather(OWM_BASE_MODEL):  # pylint: disable=R0903
 
         abstract = True
 
+    def __str__(self):
+        return f"{self.location.name} - {self.timestamp}"
+
 
 class HourlyWeather(AbstractBaseWeatherData):  # pylint: disable=R0903
     """Abstract model for storing hourly weather data."""
+
+    if OWM_USE_UUID:
+        uuid = models.UUIDField(primary_key=True, editable=False, unique=True, default=uuid.uuid4)
 
     temp = models.DecimalField(
         _("Temperature"),
@@ -162,9 +188,15 @@ class HourlyWeather(AbstractBaseWeatherData):  # pylint: disable=R0903
 
         abstract = True
 
+    def __str__(self):
+        return f"{self.location.name} - {self.timestamp}"
+
 
 class DailyWeather(AbstractBaseWeatherData):  # pylint: disable=R0903
     """Abstract model for storing daily weather data."""
+
+    if OWM_USE_UUID:
+        uuid = models.UUIDField(primary_key=True, editable=False, unique=True, default=uuid.uuid4)
 
     sunrise = models.DateTimeField(blank=True, null=True)
     sunset = models.DateTimeField(blank=True, null=True)
@@ -275,6 +307,9 @@ class DailyWeather(AbstractBaseWeatherData):  # pylint: disable=R0903
 
         abstract = True
 
+    def __str__(self):
+        return f"{self.location.name} - {self.timestamp}"
+
     @property
     def moon_phase_description(self):  # pylint: disable=R0911
         """Return a description of the moon phase."""
@@ -303,6 +338,9 @@ class DailyWeather(AbstractBaseWeatherData):  # pylint: disable=R0903
 class WeatherAlert(OWM_BASE_MODEL):  # pylint: disable=R0903
     """Abstract model for storing weather alerts."""
 
+    if OWM_USE_UUID:
+        uuid = models.UUIDField(primary_key=True, editable=False, unique=True, default=uuid.uuid4)
+
     location = models.ForeignKey(
         OWM_MODEL_MAPPINGS["WeatherLocation"],
         on_delete=models.CASCADE,
@@ -320,9 +358,15 @@ class WeatherAlert(OWM_BASE_MODEL):  # pylint: disable=R0903
 
         abstract = True
 
+    def __str__(self):
+        return f"{self.location.name} - ({self.start} - {self.end})"
+
 
 class WeatherErrorLog(OWM_BASE_MODEL):  # pylint: disable=R0903
     """Abstract model for storing weather API error logs."""
+
+    if OWM_USE_UUID:
+        uuid = models.UUIDField(primary_key=True, editable=False, unique=True, default=uuid.uuid4)
 
     timestamp = models.DateTimeField(auto_now_add=True)
     location = models.ForeignKey(
@@ -339,9 +383,15 @@ class WeatherErrorLog(OWM_BASE_MODEL):  # pylint: disable=R0903
 
         abstract = True
 
+    def __str__(self):
+        return f"{self.api_name} - {self.timestamp}"
+
 
 class APICallLog(OWM_BASE_MODEL):  # pylint: disable=R0903
     """Abstract model for storing API call logs."""
+
+    if OWM_USE_UUID:
+        uuid = models.UUIDField(primary_key=True, editable=False, unique=True, default=uuid.uuid4)
 
     timestamp = models.DateTimeField(auto_now_add=True)
     api_name = models.CharField(max_length=255)
@@ -364,3 +414,6 @@ class APICallLog(OWM_BASE_MODEL):  # pylint: disable=R0903
         """Meta options for the APICallLog model."""
 
         abstract = True
+
+    def __str__(self):
+        return f"{self.api_name} - {self.timestamp}"

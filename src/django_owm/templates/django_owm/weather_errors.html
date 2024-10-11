@@ -1,0 +1,29 @@
+{% extends "django_owm/base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+    <h1>{% trans 'Weather Errors for' %} {{ location.name }}</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <>{% trans 'Timestamp' %}</th>
+                <th>{% trans 'API Name' %}</th>
+                <th>{% trans 'Error Message' %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for error in errors %}
+                <tr>
+                    <td>{{ error.timestamp }}</td>
+                    <td>{{ error.api_name }}</td>
+                    <td>{{ error.error_message }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3">{% trans 'No errors recorded' %}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

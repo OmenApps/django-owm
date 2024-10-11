@@ -1,21 +1,50 @@
 {% extends "django_owm/base.html" %}
 
+{% load i18n %}
+
 {% block content %}
 <div class="container mt-5">
-    <h1 class="mb-4">Weather for {{ location.name }}</h1>
+    <h1 class="mb-4">{% trans 'Weather for' %} {{ location.name }}</h1>
+    <h3>({{ location.latitude }}, {{ location.longitude }})</h3>
+
+    {% if show_map %}
+        <div id="map" style="height: 400px;"></div>
+    {% endif %}
+
     {% if current_weather %}
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Current Weather</h5>
-                <p class="card-text">Temperature: {{ current_weather.temp }} K</p>
-                <p class="card-text">Feels Like: {{ current_weather.feels_like }} K</p>
-                <p class="card-text">Pressure: {{ current_weather.pressure }} hPa</p>
-                <p class="card-text">Humidity: {{ current_weather.humidity }}%</p>
-                <!-- Add more fields as desired -->
+                <h5 class="card-title">{% trans 'Current Weather' %}</h5>
+                <p class="card-text">{% trans 'Temperature' %}: {{ current_weather.temp }} K</p>
+                <p class="card-text">{% trans 'Feels Like' %}: {{ current_weather.feels_like }} K</p>
+                <p class="card-text">{% trans 'Pressure' %}: {{ current_weather.pressure }} hPa</p>
+                <p class="card-text">{% trans 'Humidity' %}: {{ current_weather.humidity }}%</p>
             </div>
         </div>
     {% else %}
-        <p>No current weather data available.</p>
+        <>{% trans 'No current weather data available' %}</p>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block js %}
+    {% if show_map %}
+        <script>
+            var map = L.map('map').setView([0, 0], 2);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; {% trans "OpenStreetMap contributors" %}',
+            }).addTo(map);
+
+            var bounds = [];
+
+            var marker = L.marker([{{ location.latitude }}, {{ location.longitude }}]).addTo(map)
+                .bindPopup("<a href='{% url 'django_owm:weather_detail' location.id %}'>{{ location.name }}</a>");
+            bounds.push([{{ location.latitude }}, {{ location.longitude }}]);
+
+            if (bounds.length > 0) {
+                map.fitBounds(bounds);
+            }
+        </script>
+    {% endif %}
 {% endblock %}

@@ -1,0 +1,13 @@
+{% extends "django_owm/base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+    <h1>{% trans 'Delete Weather Location' %}</h1>
+    <p>{% trans 'Are you sure you want to delete the location' %} "{{ location.name }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">{% trans 'Yes, Delete' %}</button>
+        <a href="{% url 'django_owm:list_locations' %}" class="btn btn-secondary">{% trans 'Cancel' %}</a>
+    </form>
+{% endblock %}

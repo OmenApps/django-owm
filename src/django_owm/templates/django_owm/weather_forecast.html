@@ -1,0 +1,57 @@
+{% extends "django_owm/base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+    <h1>{% trans 'Weather Forecast for' %} {{ location.name }}</h1>
+
+    <h2>{% trans 'Hourly Forecast' %}</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>{% trans 'Time' %}</th>
+                <th>{% trans 'Temperature (K)' %}</th>
+                <th>{% trans 'Weather' %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for weather in hourly_forecast %}
+                <tr>
+                    <td>{{ weather.timestamp }}</td>
+                    <td>{{ weather.temp }}</td>
+                    <td>{{ weather.weather_condition_main }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3">{% trans 'No hourly forecast available' %}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>{% trans 'Daily Forecast' %}</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>{% trans 'Date' %}</th>
+                <th>{% trans 'Min Temp (K)' %}</th>
+                <th>{% trans 'Max Temp (K)' %}</th>
+                <th>{% trans 'weather' %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for weather in daily_forecast %}
+                <tr>
+                    <td>{{ weather.timestamp.date }}</td>
+                    <td>{{ weather.temp_min }}</td>
+                    <td>{{ weather.temp_max }}</td>
+                    <td>{{ weather.weather_condition_main }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4">{% trans 'No daily forecast available' %}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

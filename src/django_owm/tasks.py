@@ -20,9 +20,15 @@ logger = logging.getLogger(__name__)
 
 @shared_task
 @check_api_limits
-def fetch_weather():
+def fetch_weather(location_ids=None):
     """Fetch current weather data for all locations."""
     WeatherLocationModel = get_model_from_string(OWM_MODEL_MAPPINGS.get("WeatherLocation"))  # pylint: disable=C0103
+
+    if location_ids is not None:
+        locations = WeatherLocationModel.objects.filter(id__in=location_ids)
+    else:
+        locations = WeatherLocationModel.objects.all()
+
     if not WeatherLocationModel:
         logger.error("WeatherLocation model is not configured.")
         locations = []
