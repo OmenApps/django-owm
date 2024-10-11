@@ -17,6 +17,7 @@ maxdepth: 1
 usage
 terminology
 reference
+autoreference
 contributing
 Code of Conduct <codeofconduct>
 License <license>
