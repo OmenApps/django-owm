@@ -89,3 +89,6 @@ profile = "black"
 force_single_line = true
 lines_after_imports = 2
 extend_skip = [".nox"]
+
+[tool.pylint]
+disable = "R0903,C0103,W0621"
