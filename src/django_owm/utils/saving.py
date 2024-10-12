@@ -24,6 +24,11 @@ if TYPE_CHECKING:
 def save_weather_data(location: AbstractWeatherLocation, data: Dict[str, Any]) -> None:
     """Save weather data to the database."""
     if data:
+        # If `location` does not have a timezone, apply it from the `data`
+        if hasattr(location, "timezone") and not location.timezone:
+            location.timezone = data.get("timezone")
+            location.save()
+
         save_current_weather(location, data)
         save_minutely_weather(location, data)
         save_hourly_weather(location, data)
