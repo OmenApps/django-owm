@@ -1,6 +1,6 @@
 # django-owm
 
-[![PyPI](https://img.shields.io/pypi/v/ kiecutter.project_name }}.svg)][pypi status]
+[![PyPI](https://img.shields.io/pypi/v/django-own.svg)][pypi status]
 [![Status](https://img.shields.io/pypi/status/django-owm.svg)][pypi status]
 [![Python Version](https://img.shields.io/pypi/pyversions/django-owm)][pypi status]
 [![License](https://img.shields.io/pypi/l/django-owm)][license]

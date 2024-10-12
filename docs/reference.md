@@ -2,19 +2,7 @@
 
 This document provides a detailed overview of the components of `django-owm`.
 
-## Table of Contents
-
-- [Reference](#reference)
-  - [Table of Contents](#table-of-contents)
-    - [Models](#models)
-    - [Management Commands](#management-commands)
-    - [Utility Functions](#utility-functions)
-    - [App Settings](#app-settings)
-      - [Example Settings Dictionary](#example-settings-dictionary)
-    - [Views](#views)
-    - [Admin](#admin)
-
-### Models
+## Models
 
 The `django-owm` app includes several abstract models that developers can use or extend for storing weather data:
 
@@ -29,7 +17,7 @@ The `django-owm` app includes several abstract models that developers can use or
 
 These models are all abstract, allowing developers to customize their own concrete versions as needed.
 
-### Management Commands
+## Management Commands
 
 The app provides several management commands to interact with the weather data models:
 
@@ -57,7 +45,7 @@ The app provides several management commands to interact with the weather data m
 
 These commands help developers easily manage the locations for which weather data is collected.
 
-### Utility Functions
+## Utility Functions
 
 The `utils` module provides various utility functions to interact with the OpenWeatherMap API and save data:
 
@@ -65,7 +53,7 @@ The `utils` module provides various utility functions to interact with the OpenW
 - **Data Saving**: Functions such as `save_weather_data`, `save_current_weather`, `save_hourly_weather`, etc., for storing weather data in the database.
 - **Error Logging**: Function `save_error_log` to log errors encountered when fetching weather data.
 
-### App Settings
+## App Settings
 
 The settings for the `django-owm` app are defined in `app_settings.py`, allowing flexibility for customization:
 
@@ -119,7 +107,7 @@ The settings for the `django-owm` app are defined in `app_settings.py`, allowing
   - **Example**: `OWM_USE_UUID = True`
   - **Why Set**: Developers may choose to use UUIDs for models to enhance data uniqueness and security, particularly in distributed systems.
 
-#### Example Settings Dictionary
+### Example Settings Dictionary
 
 ```python
 DJANGO_OWM = {
@@ -147,7 +135,7 @@ DJANGO_OWM = {
 
 These settings provide a flexible and extensible approach to managing the app's configuration, allowing developers to tailor the behavior and data models of the `django-owm` app to meet the needs of their specific project.
 
-### Views
+## Views
 
 The app provides several function-based views for displaying weather data:
 
@@ -163,7 +151,7 @@ The app provides several function-based views for displaying weather data:
 
 These views are designed to be easily customizable and integrate seamlessly with Django templates.
 
-### Admin
+## Admin
 
 The app provides built-in Django admin support for the weather data models, including:
 
