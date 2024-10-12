@@ -205,7 +205,7 @@ def docs_build(session: Session, django: str) -> None:
         args.insert(0, "--color")
 
     session.install(".")
-    session.install("sphinx", "sphinx-click", "furo", "myst-parser")
+    session.install("-r", "docs/requirements.txt")
 
     build_dir = Path("docs", "_build")
     if build_dir.exists():
@@ -220,7 +220,7 @@ def docs(session: Session, django: str) -> None:
     """Build and serve the documentation with live reloading on file changes."""
     args = session.posargs or ["--open-browser", "docs", "docs/_build"]
     session.install(".")
-    session.install("sphinx", "sphinx-autobuild", "sphinx-click", "furo", "myst-parser")
+    session.install("sphinx", "sphinx-autobuild", "sphinx-click", "furo", "myst-parser", "celery")
 
     build_dir = Path("docs", "_build")
     if build_dir.exists():
