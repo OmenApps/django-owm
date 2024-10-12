@@ -7,6 +7,10 @@ from ..app_settings import OWM_BASE_MODEL
 from ..app_settings import OWM_MODEL_MAPPINGS
 
 
+if callable(OWM_BASE_MODEL):
+    OWM_BASE_MODEL = OWM_BASE_MODEL()
+
+
 class AbstractBaseWeatherData(OWM_BASE_MODEL):
     """Abstract base model for storing weather data. Not intended to be used directly."""
 

@@ -14,6 +14,9 @@ from .base import AbstractBaseWeatherData
 if OWM_USE_UUID:
     import uuid
 
+if callable(OWM_BASE_MODEL):
+    OWM_BASE_MODEL = OWM_BASE_MODEL()
+
 
 class AbstractWeatherLocation(OWM_BASE_MODEL):
     """Abstract model for storing weather location data."""
