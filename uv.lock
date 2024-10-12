@@ -10,11 +10,11 @@ prerelease-mode = "allow"
 
 [[package]]
 name = "alabaster"
-version = "0.7.16"
+version = "1.0.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/c9/3e/13dd8e5ed9094e734ac430b5d0eb4f2bb001708a8b7856cbf8e084e001ba/alabaster-0.7.16.tar.gz", hash = "sha256:75a8b99c28a5dad50dd7f8ccdd447a121ddb3892da9e53d1ca5cca3106d58d65", size = 23776 }
+sdist = { url = "https://files.pythonhosted.org/packages/a6/f8/d9c74d0daf3f742840fd818d69cfae176fa332022fd44e3469487d5a9420/alabaster-1.0.0.tar.gz", hash = "sha256:c00dca57bca26fa62a6d7d0a9fcce65f3e026e9bfe33e9c538fd3fbb2144fd9e", size = 24210 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/32/34/d4e1c02d3bee589efb5dfa17f88ea08bdb3e3eac12bc475462aec52ed223/alabaster-0.7.16-py3-none-any.whl", hash = "sha256:b46733c07dce03ae4e150330b975c75737fa60f0a7c591b6c8bf4928a28e2c92", size = 13511 },
+    { url = "https://files.pythonhosted.org/packages/7e/b3/6b4067be973ae96ba0d615946e314c5ae35f9f993eca561b356540bb0c2b/alabaster-1.0.0-py3-none-any.whl", hash = "sha256:fc6786402dc3fcb2de3cabd5fe455a2db534b371124f1f21de8731783dec828b", size = 13929 },
 ]
 
 [[package]]
@@ -590,16 +590,16 @@ wheels = [
 
 [[package]]
 name = "django"
-version = "4.2.16"
+version = "5.1.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "asgiref" },
     { name = "sqlparse" },
     { name = "tzdata", marker = "sys_platform == 'win32'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/65/d8/a607ee443b54a4db4ad28902328b906ae6218aa556fb9b3ac45c0bcb313d/Django-4.2.16.tar.gz", hash = "sha256:6f1616c2786c408ce86ab7e10f792b8f15742f7b7b7460243929cb371e7f1dad", size = 10436023 }
+sdist = { url = "https://files.pythonhosted.org/packages/9c/e5/a06e20c963b280af4aa9432bc694fbdeb1c8df9e28c2ffd5fbb71c4b1bec/Django-5.1.2.tar.gz", hash = "sha256:bd7376f90c99f96b643722eee676498706c9fd7dc759f55ebfaf2c08ebcdf4f0", size = 10711674 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/94/2c/6b6c7e493d5ea789416918658ebfa16be7a64c77610307497ed09a93c8c4/Django-4.2.16-py3-none-any.whl", hash = "sha256:1ddc333a16fc139fd253035a1606bb24261951bbc3a6ca256717fa06cc41a898", size = 7992936 },
+    { url = "https://files.pythonhosted.org/packages/a3/b8/f205f2b8c44c6cdc555c4f56bbe85ceef7f67c0cf1caa8abe078bb7e32bd/Django-5.1.2-py3-none-any.whl", hash = "sha256:f11aa87ad8d5617171e3f77e1d5d16f004b79a2cf5d2e1d2b97a6a1f8e9ba5ed", size = 8276058 },
 ]
 
 [[package]]
@@ -607,6 +607,7 @@ name = "django-owm"
 version = "2024.10.1"
 source = { virtual = "." }
 dependencies = [
+    { name = "celery" },
     { name = "click" },
     { name = "django" },
     { name = "requests" },
@@ -616,7 +617,6 @@ dependencies = [
 dev = [
     { name = "bandit" },
     { name = "black" },
-    { name = "celery" },
     { name = "coverage", extra = ["toml"] },
     { name = "darglint" },
     { name = "flake8" },
@@ -649,7 +649,7 @@ dev = [
 requires-dist = [
     { name = "bandit", marker = "extra == 'dev'", specifier = ">=1.7.8" },
     { name = "black", marker = "extra == 'dev'", specifier = ">=24.4.2" },
-    { name = "celery", marker = "extra == 'dev'", specifier = ">=5.2.0" },
+    { name = "celery", specifier = ">=5.2.0" },
     { name = "click", specifier = ">=8.1.7" },
     { name = "coverage", extras = ["toml"], marker = "extra == 'dev'", specifier = ">=7.5.1" },
     { name = "darglint", marker = "extra == 'dev'", specifier = ">=1.8.1" },
@@ -658,9 +658,9 @@ requires-dist = [
     { name = "flake8-bugbear", marker = "extra == 'dev'", specifier = ">=24.4.26" },
     { name = "flake8-docstrings", marker = "extra == 'dev'", specifier = ">=1.7.0" },
     { name = "flake8-rst-docstrings", marker = "extra == 'dev'", specifier = ">=0.3.0" },
-    { name = "furo", marker = "extra == 'dev'", specifier = ">=2024.5.6" },
+    { name = "furo", marker = "extra == 'dev'", specifier = ">=2024.8.6" },
     { name = "isort", marker = "extra == 'dev'", specifier = ">=5.13.2" },
-    { name = "myst-parser", marker = "extra == 'dev'", specifier = ">=3.0.1" },
+    { name = "myst-parser", marker = "extra == 'dev'", specifier = ">=4.0.0" },
     { name = "nox", marker = "extra == 'dev'", specifier = ">=2024.4.15" },
     { name = "nox-poetry", marker = "extra == 'dev'", specifier = ">=1.0.3" },
     { name = "pep8-naming", marker = "extra == 'dev'", specifier = ">=0.14.1" },
@@ -675,7 +675,7 @@ requires-dist = [
     { name = "redis", marker = "extra == 'dev'", specifier = ">=4.0.0" },
     { name = "requests", specifier = ">=2.31.0" },
     { name = "safety", marker = "extra == 'dev'", specifier = ">=3.2.0" },
-    { name = "sphinx", marker = "extra == 'dev'", specifier = ">=7.3.7" },
+    { name = "sphinx", marker = "extra == 'dev'", specifier = ">=8.1.0" },
     { name = "sphinx-autobuild", marker = "extra == 'dev'", specifier = ">=2024.4.16" },
     { name = "sphinx-click", marker = "extra == 'dev'", specifier = ">=6.0.0" },
     { name = "xdoctest", extras = ["colors"], marker = "extra == 'dev'", specifier = ">=1.1.3" },
@@ -1163,7 +1163,7 @@ wheels = [
 
 [[package]]
 name = "myst-parser"
-version = "3.0.1"
+version = "4.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "docutils" },
@@ -1173,9 +1173,9 @@ dependencies = [
     { name = "pyyaml" },
     { name = "sphinx" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/49/64/e2f13dac02f599980798c01156393b781aec983b52a6e4057ee58f07c43a/myst_parser-3.0.1.tar.gz", hash = "sha256:88f0cb406cb363b077d176b51c476f62d60604d68a8dcdf4832e080441301a87", size = 92392 }
+sdist = { url = "https://files.pythonhosted.org/packages/85/55/6d1741a1780e5e65038b74bce6689da15f620261c490c3511eb4c12bac4b/myst_parser-4.0.0.tar.gz", hash = "sha256:851c9dfb44e36e56d15d05e72f02b80da21a9e0d07cba96baf5e2d476bb91531", size = 93858 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e2/de/21aa8394f16add8f7427f0a1326ccd2b3a2a8a3245c9252bc5ac034c6155/myst_parser-3.0.1-py3-none-any.whl", hash = "sha256:6457aaa33a5d474aca678b8ead9b3dc298e89c68e67012e73146ea6fd54babf1", size = 83163 },
+    { url = "https://files.pythonhosted.org/packages/ca/b4/b036f8fdb667587bb37df29dc6644681dd78b7a2a6321a34684b79412b28/myst_parser-4.0.0-py3-none-any.whl", hash = "sha256:b9317997552424448c6096c2558872fdb6f81d3ecb3a40ce84a7518798f3f28d", size = 84563 },
 ]
 
 [[package]]
@@ -1968,7 +1968,7 @@ wheels = [
 
 [[package]]
 name = "sphinx"
-version = "7.4.7"
+version = "8.1.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "alabaster" },
@@ -1989,9 +1989,9 @@ dependencies = [
     { name = "sphinxcontrib-serializinghtml" },
     { name = "tomli", marker = "python_full_version < '3.11'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/5b/be/50e50cb4f2eff47df05673d361095cafd95521d2a22521b920c67a372dcb/sphinx-7.4.7.tar.gz", hash = "sha256:242f92a7ea7e6c5b406fdc2615413890ba9f699114a9c09192d7dfead2ee9cfe", size = 8067911 }
+sdist = { url = "https://files.pythonhosted.org/packages/9d/f3/e3c6fb6d015d6b0c5215d1a6e45276aa89b6685fc63a1b7ac230bcebcb4f/sphinx-8.1.0.tar.gz", hash = "sha256:109454425dbf4c78ecfdd481e56f078376d077edbda29804dba05c5161c8de06", size = 8183960 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/0d/ef/153f6803c5d5f8917dbb7f7fcf6d34a871ede3296fa89c2c703f5f8a6c8e/sphinx-7.4.7-py3-none-any.whl", hash = "sha256:c2419e2135d11f1951cd994d6eb18a1835bd8fdd8429f9ca375dc1f3281bd239", size = 3401624 },
+    { url = "https://files.pythonhosted.org/packages/fb/21/143e5e4666432668fbd669f89ee0abc50040787f932bd30befd0f7a42a6e/sphinx-8.1.0-py3-none-any.whl", hash = "sha256:3202bba95697b9fc4371a07d6d457239de9860244ce235283149f817c253fd2f", size = 3486829 },
 ]
 
 [[package]]
@@ -2153,11 +2153,11 @@ wheels = [
 
 [[package]]
 name = "trove-classifiers"
-version = "2024.9.12"
+version = "2024.10.11"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/16/14/55ceb59dabf95f554b5368fdabe8d370165a25f817a23d809ad6c87a0b06/trove_classifiers-2024.9.12.tar.gz", hash = "sha256:4b46b3e134a4d01999ac5bc6e528afcc10cc48f0f724f185f267e276005768f4", size = 16058 }
+sdist = { url = "https://files.pythonhosted.org/packages/a1/e5/5663cb67e695a5e7d6af6d7809194157be218a5432072f26d8fb04084d94/trove_classifiers-2024.10.11.tar.gz", hash = "sha256:4ce46e44b2c2eb86a7a073d825fffe99d445b4712d3ed6afb0a1ad001e81ff62", size = 16085 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b6/7a/e0edec9c8905e851d52076bbc41890603e2ba97cf64966bc1498f2244fd2/trove_classifiers-2024.9.12-py3-none-any.whl", hash = "sha256:f88a27a892891c87c5f8bbdf110710ae9e0a4725ea8e0fb45f1bcadf088a491f", size = 13483 },
+    { url = "https://files.pythonhosted.org/packages/db/f0/0a650be35cfb7e38a394e32232908c4dc8a7dcc19686d745bc47ac025739/trove_classifiers-2024.10.11-py3-none-any.whl", hash = "sha256:8f628a5cead62d720dadc43f2aed9d48c923e27cb8a0e1c929fb25c5a932b719", size = 13499 },
 ]
 
 [[package]]
