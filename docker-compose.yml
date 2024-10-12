@@ -11,4 +11,3 @@ services:
     ports:
       - "8111:8111"
     command: /start
-
