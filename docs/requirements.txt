@@ -1,5 +1,5 @@
 celery==5.4.0
 furo==2024.8.6
-sphinx==8.1.0
+sphinx==8.1.1
 sphinx-click==6.0.0
 myst-parser==4.0
