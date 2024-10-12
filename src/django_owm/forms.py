@@ -72,15 +72,13 @@ class WeatherLocationForm(forms.ModelForm):
     def clean_latitude(self):
         """Clean the input latitude value."""
         latitude = self.cleaned_data.get("latitude")
-        if latitude is not None:
-            # Validate the latitude value is a Decimal within the valid range
-            validate_latitude(latitude)
+        # Validate the latitude value is a Decimal within the valid range
+        validate_latitude(latitude)
         return latitude
 
     def clean_longitude(self):
         """Clean the input longitude value."""
         longitude = self.cleaned_data.get("longitude")
-        if longitude is not None:
-            # Validate the longitude value is a Decimal within the valid range
-            validate_longitude(longitude)
+        # Validate the longitude value is a Decimal within the valid range
+        validate_longitude(longitude)
         return longitude

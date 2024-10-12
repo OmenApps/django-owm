@@ -38,10 +38,10 @@ def save_weather_data(location: AbstractWeatherLocation, data: Dict[str, Any]) -
 
 def save_current_weather(location: AbstractWeatherLocation, data: Dict[str, Any]) -> None:
     """Save current weather data to the database."""
-    CurrentWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("CurrentWeather"))
+    CurrentWeather = apps.get_model(OWM_MODEL_MAPPINGS.get("CurrentWeather"))
 
-    if not CurrentWeatherModel:
-        logger.error("CurrentWeatherModel is not configured.")
+    if not CurrentWeather:
+        logger.error("CurrentWeather is not configured.")
         return
 
     current_data = data.get("current", {})
@@ -51,7 +51,7 @@ def save_current_weather(location: AbstractWeatherLocation, data: Dict[str, Any]
     timestamp = timezone.datetime.fromtimestamp(current_data["dt"], tz=datetime.timezone.utc)
     weather_condition = current_data.get("weather", None)
     weather_condition = weather_condition[0] if weather_condition else {}
-    CurrentWeatherModel.objects.create(
+    CurrentWeather.objects.create(
         location=location,
         timestamp=timestamp,
         temp=current_data.get("temp"),
@@ -76,10 +76,10 @@ def save_current_weather(location: AbstractWeatherLocation, data: Dict[str, Any]
 
 def save_minutely_weather(location: AbstractWeatherLocation, data: Dict[str, Any]) -> None:
     """Save minutely weather data to the database."""
-    MinutelyWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("MinutelyWeather"))
+    MinutelyWeather = apps.get_model(OWM_MODEL_MAPPINGS.get("MinutelyWeather"))
 
-    if not MinutelyWeatherModel:
-        logger.error("MinutelyWeatherModel is not configured.")
+    if not MinutelyWeather:
+        logger.error("MinutelyWeather is not configured.")
         return
 
     minutely_data = data.get("minutely", [])
@@ -88,7 +88,7 @@ def save_minutely_weather(location: AbstractWeatherLocation, data: Dict[str, Any
 
     for minute_data in minutely_data:
         timestamp = timezone.datetime.fromtimestamp(minute_data["dt"], tz=datetime.timezone.utc)
-        MinutelyWeatherModel.objects.create(
+        MinutelyWeather.objects.create(
             location=location,
             timestamp=timestamp,
             precipitation=minute_data.get("precipitation"),
@@ -97,10 +97,10 @@ def save_minutely_weather(location: AbstractWeatherLocation, data: Dict[str, Any
 
 def save_hourly_weather(location: AbstractWeatherLocation, data: Dict[str, Any]) -> None:
     """Save hourly weather data to the database."""
-    HourlyWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("HourlyWeather"))
+    HourlyWeather = apps.get_model(OWM_MODEL_MAPPINGS.get("HourlyWeather"))
 
-    if not HourlyWeatherModel:
-        logger.error("HourlyWeatherModel is not configured.")
+    if not HourlyWeather:
+        logger.error("HourlyWeather is not configured.")
         return
 
     hourly_data = data.get("hourly", [])
@@ -111,7 +111,7 @@ def save_hourly_weather(location: AbstractWeatherLocation, data: Dict[str, Any])
         timestamp = timezone.datetime.fromtimestamp(hour_data["dt"], tz=datetime.timezone.utc)
         weather_condition = hour_data.get("weather", None)
         weather_condition = weather_condition[0] if weather_condition else {}
-        HourlyWeatherModel.objects.create(
+        HourlyWeather.objects.create(
             location=location,
             timestamp=timestamp,
             temp=hour_data.get("temp"),
@@ -136,10 +136,10 @@ def save_hourly_weather(location: AbstractWeatherLocation, data: Dict[str, Any])
 
 def save_daily_weather(location: AbstractWeatherLocation, data: Dict[str, Any]) -> None:
     """Save daily weather data to the database."""
-    DailyWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("DailyWeather"))
+    DailyWeather = apps.get_model(OWM_MODEL_MAPPINGS.get("DailyWeather"))
 
-    if not DailyWeatherModel:
-        logger.error("DailyWeatherModel is not configured.")
+    if not DailyWeather:
+        logger.error("DailyWeather is not configured.")
         return
 
     daily_data = data.get("daily", [])
@@ -150,11 +150,19 @@ def save_daily_weather(location: AbstractWeatherLocation, data: Dict[str, Any]) 
         timestamp = timezone.datetime.fromtimestamp(day_data["dt"], tz=datetime.timezone.utc)
         weather_condition = day_data.get("weather", None)
         weather_condition = weather_condition[0] if weather_condition else {}
-        DailyWeatherModel.objects.create(
+        DailyWeather.objects.create(
             location=location,
             timestamp=timestamp,
-            sunrise=timezone.datetime.fromtimestamp(day_data["sunrise"], tz=datetime.timezone.utc),
-            sunset=timezone.datetime.fromtimestamp(day_data["sunset"], tz=datetime.timezone.utc),
+            sunrise=(
+                timezone.datetime.fromtimestamp(day_data.get("sunrise"), tz=datetime.timezone.utc)
+                if day_data.get("sunrise")
+                else None
+            ),
+            sunset=(
+                timezone.datetime.fromtimestamp(day_data.get("sunset"), tz=datetime.timezone.utc)
+                if day_data.get("sunset")
+                else None
+            ),
             temp_day=day_data.get("temp", {}).get("day"),
             temp_min=day_data.get("temp", {}).get("min"),
             temp_max=day_data.get("temp", {}).get("max"),
@@ -184,10 +192,10 @@ def save_daily_weather(location: AbstractWeatherLocation, data: Dict[str, Any]) 
 
 def save_alerts(location: AbstractWeatherLocation, data: Dict[str, Any]) -> None:
     """Save weather alerts to the database."""
-    WeatherAlertModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherAlert"))
+    WeatherAlert = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherAlert"))
 
-    if not WeatherAlertModel:
-        logger.error("WeatherAlertModel is not configured.")
+    if not WeatherAlert:
+        logger.error("WeatherAlert is not configured.")
         return
 
     alerts = data.get("alerts", [])
@@ -197,7 +205,7 @@ def save_alerts(location: AbstractWeatherLocation, data: Dict[str, Any]) -> None
     for alert in alerts:
         start = timezone.datetime.fromtimestamp(alert["start"], tz=datetime.timezone.utc)
         end = timezone.datetime.fromtimestamp(alert["end"], tz=datetime.timezone.utc)
-        WeatherAlertModel.objects.create(
+        WeatherAlert.objects.create(
             location=location,
             sender_name=alert.get("sender_name"),
             event=alert.get("event"),
@@ -214,11 +222,11 @@ def save_error_log(
     response_data: Optional[Dict[str, Any]] = None,
 ) -> None:
     """Save error log to the database."""
-    WeatherErrorLogModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherErrorLog"))
-    if not WeatherErrorLogModel:
-        logger.error("WeatherErrorLogModel is not configured.")
+    WeatherErrorLog = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherErrorLog"))
+    if not WeatherErrorLog:
+        logger.error("WeatherErrorLog is not configured.")
         return
-    WeatherErrorLogModel.objects.create(
+    WeatherErrorLog.objects.create(
         location=location,
         api_name=api_name,
         error_message=error_message,

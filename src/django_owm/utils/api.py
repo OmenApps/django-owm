@@ -7,6 +7,7 @@ from typing import Callable
 from typing import List
 from typing import Optional
 from typing import Tuple
+from typing import Union
 
 import requests
 from django.apps import apps
@@ -25,11 +26,12 @@ def get_api_call_counts(api_name: str) -> Tuple[int, int]:
     now = timezone.now()
     one_minute_ago = now - timezone.timedelta(minutes=1)
     one_month_ago = now - timezone.timedelta(days=30)
-    APICallLogModel = apps.get_model(OWM_MODEL_MAPPINGS.get("APICallLog"))
-    if not APICallLogModel:
+    model_string = OWM_MODEL_MAPPINGS.get("APICallLog")
+    APICallLog = apps.get_model(model_string) if model_string else None
+    if not APICallLog:
         return 0, 0
-    calls_last_minute = APICallLogModel.objects.filter(api_name=api_name, timestamp__gte=one_minute_ago).count()
-    calls_last_month = APICallLogModel.objects.filter(api_name=api_name, timestamp__gte=one_month_ago).count()
+    calls_last_minute = APICallLog.objects.filter(api_name=api_name, timestamp__gte=one_minute_ago).count()
+    calls_last_month = APICallLog.objects.filter(api_name=api_name, timestamp__gte=one_month_ago).count()
     return calls_last_minute, calls_last_month
 
 
@@ -37,7 +39,7 @@ def check_api_limits(func: Callable) -> Callable:
     """Decorator to check API call limits before running a task."""
 
     @wraps(func)
-    def wrapper(*args, **kwargs) -> Optional[Callable]:
+    def wrapper(*args, **kwargs) -> Union[bool, Callable]:
         """Check API call limits before running the task."""
         api_name = "one_call"
         rate_limits = OWM_API_RATE_LIMITS.get(api_name, {})
@@ -47,7 +49,7 @@ def check_api_limits(func: Callable) -> Callable:
         calls_last_minute, calls_last_month = get_api_call_counts(api_name)
         if calls_last_minute >= calls_per_minute or calls_last_month >= calls_per_month:
             logger.warning("API call limit exceeded. Skipping task.")
-            return
+            return False
 
         return func(*args, **kwargs)
 
@@ -56,9 +58,10 @@ def check_api_limits(func: Callable) -> Callable:
 
 def log_api_call(api_name: str) -> None:
     """Log an API call to the database."""
-    APICallLogModel = apps.get_model(OWM_MODEL_MAPPINGS.get("APICallLog"))
-    if APICallLogModel:
-        APICallLogModel.objects.create(api_name=api_name)
+    model_string = OWM_MODEL_MAPPINGS.get("APICallLog")
+    APICallLog = apps.get_model(model_string) if model_string else None
+    if APICallLog:
+        APICallLog.objects.create(api_name=api_name)
 
 
 def make_api_call(
@@ -97,6 +100,9 @@ def make_api_call(
                 if key in current:
                     current[key] = str(current[key])
             return data
+        else:
+            logger.error("Error fetching weather data: %s", response.text)
+            return None
     except requests.RequestException as e:
         logger.exception("Error fetching weather data: %s", e)
         return None
