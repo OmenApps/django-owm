@@ -75,7 +75,7 @@ RUN uv venv
 COPY pyproject.toml uv.lock ${APP_HOME}/
 
 # Install dependencies using uv
-RUN uv sync --prerelease=allow
+RUN uv sync --prerelease=allow --extra dev
 
 # Copy remaining project files
 COPY noxfile.py manage.py ${APP_HOME}
