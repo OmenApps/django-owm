@@ -1,0 +1,39 @@
+{% load i18n %}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>{% trans 'Timestamp' %}</th>
+            <th>{% trans 'API Name' %}</th>
+            <th>{% trans 'Error Message' %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for error in page_obj %}
+            <tr>
+                <td>{{ error.timestamp }}</td>
+                <td>{{ error.api_name }}</td>
+                <td>{{ error.error_message }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="3">{% trans 'No errors recorded' %}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<nav aria-label="Weather errors pagination">
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="#" hx-get="{% url 'django_owm:weather_errors_partial' location.id %}?page={{ page_obj.previous_page_number }}" hx-target="#weather-errors">Previous</a>
+            </li>
+        {% endif %}
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="#" hx-get="{% url 'django_owm:weather_errors_partial' location.id %}?page={{ page_obj.next_page_number }}" hx-target="#weather-errors">Next</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>

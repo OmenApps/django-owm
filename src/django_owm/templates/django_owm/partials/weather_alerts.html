@@ -1,0 +1,26 @@
+{% load i18n %}
+
+{% for alert in page_obj %}
+    <div class="alert alert-warning">
+        <h4>{{ alert.event }}</h4>
+        <p><strong>{% trans 'From' %}:</strong> {{ alert.start }} <strong>{% trans 'To' %}:</strong> {{ alert.end }}</p>
+        <p>{{ alert.description }}</p>
+    </div>
+{% empty %}
+    <p>{% trans 'No weather alerts at this time' %}</p>
+{% endfor %}
+
+<nav aria-label="Weather alerts pagination">
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="#" hx-get="{% url 'django_owm:weather_alerts_partial' location.id %}?page={{ page_obj.previous_page_number }}" hx-target="#weather-alerts">Previous</a>
+            </li>
+        {% endif %}
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="#" hx-get="{% url 'django_owm:weather_alerts_partial' location.id %}?page={{ page_obj.next_page_number }}" hx-target="#weather-alerts">Next</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>

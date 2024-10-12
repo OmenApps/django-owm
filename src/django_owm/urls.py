@@ -19,6 +19,16 @@ if OWM_USE_UUID:
         path("weather/<uuid:location_id>/forecast/", views.weather_forecast, name="weather_forecast"),
         path("weather/<uuid:location_id>/alerts/", views.weather_alerts, name="weather_alerts"),
         path("weather/<uuid:location_id>/errors/", views.weather_errors, name="weather_errors"),
+        path(
+            "weather/<uuid:location_id>/history/partial/", views.weather_history_partial, name="weather_history_partial"
+        ),
+        path(
+            "weather/<uuid:location_id>/forecast/partial/",
+            views.weather_forecast_partial,
+            name="weather_forecast_partial",
+        ),
+        path("weather/<uuid:location_id>/alerts/partial/", views.weather_alerts_partial, name="weather_alerts_partial"),
+        path("weather/<uuid:location_id>/errors/partial/", views.weather_errors_partial, name="weather_errors_partial"),
     ]
 else:
     urlpatterns = [
@@ -31,4 +41,14 @@ else:
         path("weather/<int:location_id>/forecast/", views.weather_forecast, name="weather_forecast"),
         path("weather/<int:location_id>/alerts/", views.weather_alerts, name="weather_alerts"),
         path("weather/<int:location_id>/errors/", views.weather_errors, name="weather_errors"),
+        path(
+            "weather/<int:location_id>/history/partial/", views.weather_history_partial, name="weather_history_partial"
+        ),
+        path(
+            "weather/<int:location_id>/forecast/partial/",
+            views.weather_forecast_partial,
+            name="weather_forecast_partial",
+        ),
+        path("weather/<int:location_id>/alerts/partial/", views.weather_alerts_partial, name="weather_alerts_partial"),
+        path("weather/<int:location_id>/errors/partial/", views.weather_errors_partial, name="weather_errors_partial"),
     ]

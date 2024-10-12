@@ -1,35 +1,62 @@
 {% extends "django_owm/base.html" %}
-
 {% load i18n %}
 
 {% block content %}
-<div class="container mt-5">
-    <h1 class="mb-4">{% trans 'Weather for' %} {{ location.name }}</h1>
-    <h3>({{ location.latitude }}, {{ location.longitude }})</h3>
+    <div class="container mt-5">
+        <h1 class="mb-4">{% trans 'Weather for' %} {{ location.name }}</h1>
+        <h3>({{ location.latitude }}, {{ location.longitude }})</h3>
 
-    <div>
-        <a href="{% url 'django_owm:update_location' location.id %}" class="btn btn-primary me-2">{% trans 'Update Location' %}</a>
-        <a href="{% url 'django_owm:delete_location' location.id %}" class="btn btn-primary me-2">{% trans 'Delete Location' %}</a>
-    </div>
+        <div>
+            <a href="{% url 'django_owm:update_location' location.id %}" class="btn btn-primary me-2">{% trans 'Update Location' %}</a>
+            <a href="{% url 'django_owm:delete_location' location.id %}" class="btn btn-primary me-2">{% trans 'Delete Location' %}</a>
+        </div>
 
-    {% if show_map %}
-        <div id="map" style="height: 400px;"></div>
-    {% endif %}
+        {% if show_map %}
+            <div id="map" style="height: 400px;"></div>
+        {% endif %}
 
-    {% if current_weather %}
-        <div class="card">
+        {% if current_weather %}
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">{% trans 'Current Weather' %}</h5>
+                    <p class="card-text">{% trans 'Temperature' %}: {{ current_weather.temp }} K</p>
+                    <p class="card-text">{% trans 'Feels Like' %}: {{ current_weather.feels_like }} K</p>
+                    <p class="card-text">{% trans 'Pressure' %}: {{ current_weather.pressure }} hPa</p>
+                    <p class="card-text">{% trans 'Humidity' %}: {{ current_weather.humidity }}%</p>
+                </div>
+            </div>
+        {% else %}
+            <p>{% trans 'No current weather data available' %}</p>
+        {% endif %}
+
+        <div class="card mt-4">
             <div class="card-body">
-                <h5 class="card-title">{% trans 'Current Weather' %}</h5>
-                <p class="card-text">{% trans 'Temperature' %}: {{ current_weather.temp }} K</p>
-                <p class="card-text">{% trans 'Feels Like' %}: {{ current_weather.feels_like }} K</p>
-                <p class="card-text">{% trans 'Pressure' %}: {{ current_weather.pressure }} hPa</p>
-                <p class="card-text">{% trans 'Humidity' %}: {{ current_weather.humidity }}%</p>
+                <h5 class="card-title">{% trans 'Weather History' %}</h5>
+                <div id="weather-history" hx-get="{% url 'django_owm:weather_history_partial' location.id %}" hx-trigger="load"></div>
             </div>
         </div>
-    {% else %}
-        <>{% trans 'No current weather data available' %}</p>
-    {% endif %}
-</div>
+
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">{% trans 'Weather Forecast' %}</h5>
+                <div id="weather-forecast" hx-get="{% url 'django_owm:weather_forecast_partial' location.id %}" hx-trigger="load"></div>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">{% trans 'Weather Alerts' %}</h5>
+                <div id="weather-alerts" hx-get="{% url 'django_owm:weather_alerts_partial' location.id %}" hx-trigger="load"></div>
+            </div>
+        </div>
+
+        <div class="card mt-4 mb-4">
+            <div class="card-body">
+                <h5 class="card-title">{% trans 'Weather Errors' %}</h5>
+                <div id="weather-errors" hx-get="{% url 'django_owm:weather_errors_partial' location.id %}" hx-trigger="load"></div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block js %}

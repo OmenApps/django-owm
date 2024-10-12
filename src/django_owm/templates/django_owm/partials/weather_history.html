@@ -1,0 +1,43 @@
+{% load i18n %}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>{% trans 'Timestamp' %}</th>
+            <th>{% trans 'Temperature (K)' %}</th>
+            <th>{% trans 'Feels Like (K)' %}</th>
+            <th>{% trans 'Pressure (hPa)' %}</th>
+            <th>{% trans 'Humidity (%)' %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for weather in page_obj %}
+            <tr>
+                <td>{{ weather.timestamp }}</td>
+                <td>{{ weather.temp }}</td>
+                <td>{{ weather.feels_like }}</td>
+                <td>{{ weather.pressure }}</td>
+                <td>{{ weather.humidity }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="5">{% trans 'No historical data available' %}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<nav aria-label="Weather history pagination">
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="#" hx-get="{% url 'django_owm:weather_history_partial' location.id %}?page={{ page_obj.previous_page_number }}" hx-target="#weather-history">Previous</a>
+            </li>
+        {% endif %}
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="#" hx-get="{% url 'django_owm:weather_history_partial' location.id %}?page={{ page_obj.next_page_number }}" hx-target="#weather-history">Next</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>

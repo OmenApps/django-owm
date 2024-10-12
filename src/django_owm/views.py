@@ -5,6 +5,7 @@ import uuid
 from typing import Union
 
 from django.apps import apps
+from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render
@@ -195,3 +196,108 @@ def weather_errors(request, location_id: Union[int, uuid.UUID]):
     }
 
     return render(request, "django_owm/weather_errors.html", context)
+
+
+def weather_history_partial(request, location_id: Union[int, uuid.UUID]):
+    """Partial view to display historical weather data for a location inside weather_detail.html."""
+    WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
+    CurrentWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("CurrentWeather"))
+
+    if OWM_USE_UUID:
+        location = get_object_or_404(WeatherLocationModel, uuid=location_id)
+    else:
+        location = get_object_or_404(WeatherLocationModel, pk=location_id)
+
+    historical_weather = CurrentWeatherModel.objects.filter(location=location).order_by("-timestamp")
+    paginator = Paginator(historical_weather, 5)
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        "location": location,
+        "page_obj": page_obj,
+    }
+
+    return render(request, "django_owm/partials/weather_history.html", context)
+
+
+def weather_forecast_partial(request, location_id: Union[int, uuid.UUID]):
+    """Partial view to display weather forecast for a location inside weather_detail.html."""
+    WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
+    HourlyWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("HourlyWeather"))
+    DailyWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("DailyWeather"))
+
+    if OWM_USE_UUID:
+        location = get_object_or_404(WeatherLocationModel, uuid=location_id)
+    else:
+        location = get_object_or_404(WeatherLocationModel, pk=location_id)
+
+    hourly_forecast = HourlyWeatherModel.objects.filter(location=location, timestamp__gte=timezone.now()).order_by(
+        "timestamp"
+    )
+    daily_forecast = DailyWeatherModel.objects.filter(location=location, timestamp__gte=timezone.now()).order_by(
+        "timestamp"
+    )
+
+    hourly_paginator = Paginator(hourly_forecast, 5)
+    daily_paginator = Paginator(daily_forecast, 5)
+
+    hourly_page = request.GET.get("hourly_page", 1)
+    daily_page = request.GET.get("daily_page", 1)
+
+    hourly_page_obj = hourly_paginator.get_page(hourly_page)
+    daily_page_obj = daily_paginator.get_page(daily_page)
+
+    context = {
+        "location": location,
+        "hourly_page_obj": hourly_page_obj,
+        "daily_page_obj": daily_page_obj,
+    }
+
+    return render(request, "django_owm/partials/weather_forecast.html", context)
+
+
+def weather_alerts_partial(request, location_id: Union[int, uuid.UUID]):
+    """Partial view to display weather alerts for a location inside weather_detail.html."""
+    WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
+    WeatherAlertModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherAlert"))
+
+    if OWM_USE_UUID:
+        location = get_object_or_404(WeatherLocationModel, uuid=location_id)
+    else:
+        location = get_object_or_404(WeatherLocationModel, pk=location_id)
+
+    alerts = WeatherAlertModel.objects.filter(location=location, end__gte=timezone.now()).order_by("start")
+    paginator = Paginator(alerts, 5)
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        "location": location,
+        "page_obj": page_obj,
+    }
+
+    return render(request, "django_owm/partials/weather_alerts.html", context)
+
+
+def weather_errors_partial(request, location_id: Union[int, uuid.UUID]):
+    """Partial view to display weather errors for a location inside weather_detail.html."""
+    WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
+    WeatherErrorLogModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherErrorLog"))
+
+    if OWM_USE_UUID:
+        location = get_object_or_404(WeatherLocationModel, uuid=location_id)
+    else:
+        location = get_object_or_404(WeatherLocationModel, pk=location_id)
+
+    errors = WeatherErrorLogModel.objects.filter(location=location).order_by("-timestamp")
+    paginator = Paginator(errors, 5)
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        "location": location,
+        "page_obj": page_obj,
+    }
+
+    return render(request, "django_owm/partials/weather_errors.html", context)
