@@ -114,12 +114,94 @@ def test_invalid_longitude(form_data, invalid_longitude):
     assert "longitude" in form.errors
 
 
+@pytest.mark.parametrize(
+    "latitude,expected_valid,expected_cleaned",
+    [
+        (None, False, None),
+        ("", False, None),
+        ("0", True, Decimal("0.00")),
+        ("90", True, Decimal("90.00")),
+        ("-90", True, Decimal("-90.00")),
+        ("45.5", True, Decimal("45.50")),
+        ("90.1", False, None),
+        ("-90.1", False, None),
+        ("invalid", False, None),
+    ],
+)
+def test_clean_latitude(form_data, latitude, expected_valid, expected_cleaned):
+    """Test the clean_latitude method of WeatherLocationForm."""
+    form_data["latitude"] = latitude
+    form = WeatherLocationForm(data=form_data)
+    if expected_valid:
+        assert form.is_valid()
+        assert form.cleaned_data["latitude"] == expected_cleaned
+    else:
+        assert not form.is_valid()
+        assert "latitude" in form.errors
+
+
+@pytest.mark.parametrize(
+    "longitude,expected_valid,expected_cleaned",
+    [
+        (None, False, None),
+        ("", False, None),
+        ("0", True, Decimal("0.00")),
+        ("180", True, Decimal("180.00")),
+        ("-180", True, Decimal("-180.00")),
+        ("45.5", True, Decimal("45.50")),
+        ("180.1", False, None),
+        ("-180.1", False, None),
+        ("invalid", False, None),
+    ],
+)
+def test_clean_longitude(form_data, longitude, expected_valid, expected_cleaned):
+    """Test the clean_longitude method of WeatherLocationForm."""
+    form_data["longitude"] = longitude
+    form = WeatherLocationForm(data=form_data)
+    if expected_valid:
+        assert form.is_valid()
+        assert form.cleaned_data["longitude"] == expected_cleaned
+    else:
+        assert not form.is_valid()
+        assert "longitude" in form.errors
+
+
+def test_latitude_none_validation():
+    """Test that None value for latitude is properly handled."""
+    form = WeatherLocationForm(data={"name": "Test", "longitude": "0", "latitude": None})
+    assert not form.is_valid()
+    assert "latitude" in form.errors
+    assert "This field is required." in form.errors["latitude"]
+
+
+def test_longitude_none_validation():
+    """Test that None value for longitude is properly handled."""
+    form = WeatherLocationForm(data={"name": "Test", "latitude": "0", "longitude": None})
+    assert not form.is_valid()
+    assert "longitude" in form.errors
+    assert "This field is required." in form.errors["longitude"]
+
+
 def test_weather_location_form_missing_required_fields():
     """Test that the WeatherLocationForm enforces required fields."""
     form = WeatherLocationForm(data={})
     assert not form.is_valid()
     assert "latitude" in form.errors
     assert "longitude" in form.errors
+
+
+@pytest.mark.django_db
+def test_weather_location_form_update(weather_location_model, form_data):
+    """Test updating an existing WeatherLocation instance."""
+    instance = weather_location_model.objects.create(**form_data)
+    updated_data = form_data.copy()
+    updated_data.update({"name": "Updated Location", "latitude": "40.71", "longitude": "-74.01"})
+    form = WeatherLocationForm(data=updated_data, instance=instance)
+    assert form.is_valid()
+    updated_instance = form.save()
+    assert updated_instance.name == "Updated Location"
+    assert updated_instance.latitude == Decimal("40.71")
+    assert updated_instance.longitude == Decimal("-74.01")
 
 
 @pytest.mark.parametrize(
@@ -144,15 +226,16 @@ def test_quantize_to_2_decimal_places_invalid_input():
         quantize_to_2_decimal_places(1.23)
 
 
-@pytest.mark.django_db
-def test_weather_location_form_update(weather_location_model, form_data):
-    """Test updating an existing WeatherLocation instance."""
-    instance = weather_location_model.objects.create(**form_data)
-    updated_data = form_data.copy()
-    updated_data.update({"name": "Updated Location", "latitude": "40.71", "longitude": "-74.01"})
-    form = WeatherLocationForm(data=updated_data, instance=instance)
-    assert form.is_valid()
-    updated_instance = form.save()
-    assert updated_instance.name == "Updated Location"
-    assert updated_instance.latitude == Decimal("40.71")
-    assert updated_instance.longitude == Decimal("-74.01")
+@pytest.mark.parametrize(
+    "value,expected",
+    [
+        ("1.234", Decimal("1.23")),
+        ("1.235", Decimal("1.24")),
+        ("invalid", "invalid"),
+        ("1.23.45", "1.23.45"),
+    ],
+)
+def test_quantize_to_2_decimal_places_with_decimal_exception(value, expected):
+    """Test the quantize_to_2_decimal_places function with inputs that may raise DecimalException."""
+    result = quantize_to_2_decimal_places(value)
+    assert result == expected

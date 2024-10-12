@@ -394,3 +394,158 @@ def test_views_with_invalid_location_id(client, invalid_id):
             url = reverse(view_name, args=[invalid_id])
             response = client.get(url)
             assert response.status_code in [404, 400], f"Unexpected status code for {view_name} with id '{invalid_id}'"
+
+
+@pytest.mark.django_db
+def test_weather_history_partial(client, weather_location_instance, current_weather):
+    """Test the weather_history_partial view."""
+    url = reverse("django_owm:weather_history_partial", kwargs={"location_id": weather_location_instance.id})
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert "location" in response.context
+    assert "page_obj" in response.context
+    assert response.context["location"] == weather_location_instance
+    assert len(response.context["page_obj"]) > 0
+
+
+@pytest.mark.django_db
+def test_weather_forecast_partial(client, weather_location_instance):
+    """Test the weather_forecast_partial view."""
+    HourlyWeather = apps.get_model(OWM_MODEL_MAPPINGS.get("HourlyWeather"))
+    DailyWeather = apps.get_model(OWM_MODEL_MAPPINGS.get("DailyWeather"))
+
+    # Create some forecast data
+    HourlyWeather.objects.create(
+        location=weather_location_instance,
+        timestamp=timezone.now() + timezone.timedelta(hours=1),
+        temp=Decimal("20.0"),
+        weather_condition_id=800,
+        weather_condition_main="Clear",
+    )
+    DailyWeather.objects.create(
+        location=weather_location_instance,
+        timestamp=timezone.now() + timezone.timedelta(days=1),
+        temp_min=Decimal("15.0"),
+        temp_max=Decimal("25.0"),
+        weather_condition_id=800,
+        weather_condition_main="Clear",
+    )
+
+    url = reverse("django_owm:weather_forecast_partial", kwargs={"location_id": weather_location_instance.id})
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert "location" in response.context
+    assert "hourly_page_obj" in response.context
+    assert "daily_page_obj" in response.context
+    assert response.context["location"] == weather_location_instance
+    assert len(response.context["hourly_page_obj"]) > 0
+    assert len(response.context["daily_page_obj"]) > 0
+
+
+@pytest.mark.django_db
+def test_weather_alerts_partial(client, weather_location_instance):
+    """Test the weather_alerts_partial view."""
+    WeatherAlert = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherAlert"))
+
+    # Create a weather alert
+    WeatherAlert.objects.create(
+        location=weather_location_instance,
+        sender_name="Test Sender",
+        event="Test Alert",
+        start=timezone.now(),
+        end=timezone.now() + timezone.timedelta(hours=1),
+        description="This is a test alert.",
+    )
+
+    url = reverse("django_owm:weather_alerts_partial", kwargs={"location_id": weather_location_instance.id})
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert "location" in response.context
+    assert "page_obj" in response.context
+    assert response.context["location"] == weather_location_instance
+    assert len(response.context["page_obj"]) > 0
+
+
+@pytest.mark.django_db
+def test_weather_errors_partial(client, weather_location_instance):
+    """Test the weather_errors_partial view."""
+    WeatherErrorLog = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherErrorLog"))
+
+    # Create a weather error log
+    WeatherErrorLog.objects.create(
+        location=weather_location_instance,
+        api_name="test_api",
+        error_message="Test error message",
+        response_data="{'error': 'Test error'}",
+    )
+
+    url = reverse("django_owm:weather_errors_partial", kwargs={"location_id": weather_location_instance.id})
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert "location" in response.context
+    assert "page_obj" in response.context
+    assert response.context["location"] == weather_location_instance
+    assert len(response.context["page_obj"]) > 0
+
+
+@pytest.mark.django_db
+def test_weather_history_partial_pagination(client, weather_location_instance):
+    """Test pagination in the weather_history_partial view."""
+    CurrentWeather = apps.get_model(OWM_MODEL_MAPPINGS.get("CurrentWeather"))
+
+    # Create 10 weather records
+    for i in range(10):
+        CurrentWeather.objects.create(
+            location=weather_location_instance,
+            timestamp=timezone.now() - timezone.timedelta(hours=i),
+            temp=Decimal("20.0"),
+            weather_condition_id=800,
+            weather_condition_main="Clear",
+        )
+
+    url = reverse("django_owm:weather_history_partial", kwargs={"location_id": weather_location_instance.id})
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert "page_obj" in response.context
+    assert response.context["page_obj"].paginator.num_pages == 2
+    assert len(response.context["page_obj"]) == 5  # 5 items per page
+
+
+@pytest.mark.django_db
+def test_weather_forecast_partial_empty_forecast(client, weather_location_instance):
+    """Test the weather_forecast_partial view with no forecast data."""
+    url = reverse("django_owm:weather_forecast_partial", kwargs={"location_id": weather_location_instance.id})
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert "hourly_page_obj" in response.context
+    assert "daily_page_obj" in response.context
+    assert len(response.context["hourly_page_obj"]) == 0
+    assert len(response.context["daily_page_obj"]) == 0
+
+
+@pytest.mark.django_db
+def test_weather_alerts_partial_no_alerts(client, weather_location_instance):
+    """Test the weather_alerts_partial view with no alerts."""
+    url = reverse("django_owm:weather_alerts_partial", kwargs={"location_id": weather_location_instance.id})
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert "page_obj" in response.context
+    assert len(response.context["page_obj"]) == 0
+
+
+@pytest.mark.django_db
+def test_weather_errors_partial_no_errors(client, weather_location_instance):
+    """Test the weather_errors_partial view with no error logs."""
+    url = reverse("django_owm:weather_errors_partial", kwargs={"location_id": weather_location_instance.id})
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert "page_obj" in response.context
+    assert len(response.context["page_obj"]) == 0
