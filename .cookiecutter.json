@@ -9,12 +9,12 @@
   "docker_compose_python_version": "3.12",
   "email": "jacklinke@gmail.com",
   "github_owner": "OmenApps",
-  "github_user": "jacklinke",
+  "github_user": "OmenApps",
   "license": "MIT",
   "package_description": "Weather from the Open Weather Map APIs",
   "package_name": "django_owm",
   "project_name": "django-owm",
   "use_playwright": "n",
   "use_postgres": "n",
-  "version": "2024.10.1"
+  "version": "2024.10.2"
 }

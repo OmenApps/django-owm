@@ -1,6 +1,6 @@
 [project]
 name = "django-owm"
-version = "2024.10.1"
+version = "2024.10.2"
 description = "Weather from the Open Weather Map APIs"
 authors = [{ name = "Jack Linke", email = "jacklinke@gmail.com" }]
 license = { text = "MIT" }
@@ -12,7 +12,7 @@ classifiers = [
     "Framework :: Django :: 4.2",
     "Framework :: Django :: 5.0",
     "Framework :: Django :: 5.1",
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
@@ -33,11 +33,11 @@ dependencies = [
 ]
 
 [project.urls]
-Changelog = "https://github.com/jacklinke/django-owm/releases"
-Homepage = "https://github.com/jacklinke/django-owm"
-Repository = "https://github.com/jacklinke/django-owm"
+Changelog = "https://github.com/OmenApps/django-owm/releases"
+Homepage = "https://github.com/OmenApps/django-owm"
+Repository = "https://github.com/OmenApps/django-owm"
 Documentation = "https://django-owm.readthedocs.io"
-Issues = "https://github.com/jacklinke/django-owm/issues"
+Issues = "https://github.com/OmenApps/django-owm/issues"
 
 [project.optional-dependencies]
 dev = [

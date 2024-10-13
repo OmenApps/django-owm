@@ -21,5 +21,5 @@ autoreference
 contributing
 Code of Conduct <codeofconduct>
 License <license>
-Changelog <https://github.com/jacklinke/django-owm/releases>
+Changelog <https://github.com/OmenApps/django-owm/releases>
 ```

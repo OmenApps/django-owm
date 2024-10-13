@@ -14,8 +14,8 @@
 
 [pypi status]: https://pypi.org/project/django-owm/
 [read the docs]: https://django-owm.readthedocs.io/
-[tests]: https://github.com/jacklinke/django-owm/actions?workflow=Tests
-[codecov]: https://app.codecov.io/gh/jacklinke/django-owm
+[tests]: https://github.com/OmenApps/django-owm/actions?workflow=Tests
+[codecov]: https://app.codecov.io/gh/OmenApps/django-owm
 [pre-commit]: https://github.com/pre-commit/pre-commit
 [black]: https://github.com/psf/black
 
@@ -158,11 +158,11 @@ This project was generated from [@OmenApps]'s [Cookiecutter Django Package] temp
 [@omenapps]: https://github.com/OmenApps
 [pypi]: https://pypi.org/
 [cookiecutter django package]: https://github.com/OmenApps/cookiecutter-django-package
-[file an issue]: https://github.com/jacklinke/django-owm/issues
+[file an issue]: https://github.com/OmenApps/django-owm/issues
 [pip]: https://pip.pypa.io/
 
 <!-- github-only -->
 
-[license]: https://github.com/jacklinke/django-owm/blob/main/LICENSE
-[contributor guide]: https://github.com/jacklinke/django-owm/blob/main/CONTRIBUTING.md
+[license]: https://github.com/OmenApps/django-owm/blob/main/LICENSE
+[contributor guide]: https://github.com/OmenApps/django-owm/blob/main/CONTRIBUTING.md
 [usage reference]: https://django-owm.readthedocs.io/en/latest/usage.html
