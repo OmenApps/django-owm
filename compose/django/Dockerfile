@@ -72,7 +72,7 @@ RUN pip install --upgrade uv
 RUN uv venv
 
 # Copy requirements files
-COPY pyproject.toml uv.lock ${APP_HOME}/
+COPY pyproject.toml uv.lock requirements.txt ${APP_HOME}/
 
 # Install dependencies using uv
 RUN uv sync --prerelease=allow --extra dev
