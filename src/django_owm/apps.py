@@ -35,7 +35,7 @@ class DjangoOwmConfig(AppConfig):
                     errors.append(
                         Error(
                             f"Model mapping for {model_name} is not set.",
-                            hint=f"Set OWM_MODEL_MAPPINGS['{model_name}'] in your settings.",
+                            hint=f"Set OWM_MODEL_MAPPINGS['{model_name}'] in your settings.",  # noqa: B907
                             obj=self,
                             id="django_owm.E001",
                         )

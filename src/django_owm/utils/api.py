@@ -1,13 +1,9 @@
 """Utility functions for working with the OpenWeatherMap API."""
 
 import logging
+from collections.abc import Callable
 from decimal import Decimal
 from functools import wraps
-from typing import Callable
-from typing import List
-from typing import Optional
-from typing import Tuple
-from typing import Union
 
 import requests
 from django.apps import apps
@@ -21,7 +17,7 @@ from ..app_settings import OWM_MODEL_MAPPINGS
 logger = logging.getLogger(__name__)
 
 
-def get_api_call_counts(api_name: str) -> Tuple[int, int]:
+def get_api_call_counts(api_name: str) -> tuple[int, int]:
     """Get the number of API calls made in the last minute and last month."""
     now = timezone.now()
     one_minute_ago = now - timezone.timedelta(minutes=1)
@@ -39,7 +35,7 @@ def check_api_limits(func: Callable) -> Callable:
     """Decorator to check API call limits before running a task."""
 
     @wraps(func)
-    def wrapper(*args, **kwargs) -> Union[bool, Callable]:
+    def wrapper(*args, **kwargs) -> bool | Callable:
         """Check API call limits before running the task."""
         api_name = "one_call"
         rate_limits = OWM_API_RATE_LIMITS.get(api_name, {})
@@ -64,11 +60,7 @@ def log_api_call(api_name: str) -> None:
         APICallLog.objects.create(api_name=api_name)
 
 
-def make_api_call(
-    lat: Decimal,
-    lon: Decimal,
-    exclude: Optional[List[str]] = None,
-) -> Optional[dict]:
+def make_api_call(lat: Decimal, lon: Decimal, exclude: list[str] | None = None) -> dict | None:
     """Make an API call to OpenWeatherMap."""
     api_key = OWM_API_KEY
     if not api_key:
@@ -83,15 +75,12 @@ def make_api_call(
     try:
         response = requests.get(url, timeout=10)
         if response.status_code == 200:
-            try:
-                if hasattr(response, "json"):
-                    data = response.json()
-                elif hasattr(response, "json_response"):
-                    data = response.json_response()
-                else:
-                    raise AttributeError("Response object has no 'json' or 'json_response' attribute.")
-            except AttributeError as e:
-                logger.exception("Error parsing JSON response: %s", e)
+            if hasattr(response, "json"):
+                data = response.json()
+            elif hasattr(response, "json_response"):
+                data = response.json_response()
+            else:
+                logger.error("Error parsing JSON response.")
                 return None
 
             # Convert relevant float values to Decimal
@@ -100,9 +89,8 @@ def make_api_call(
                 if key in current:
                     current[key] = str(current[key])
             return data
-        else:
-            logger.error("Error fetching weather data: %s", response.text)
-            return None
+        logger.error("Error fetching weather data: %s", response.text)
+        return None
     except requests.RequestException as e:
         logger.exception("Error fetching weather data: %s", e)
         return None

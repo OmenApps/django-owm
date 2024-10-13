@@ -27,10 +27,10 @@ class Command(BaseCommand):
             self.stderr.write(self.style.ERROR(f"Location with ID {location_id} does not exist."))
             raise CommandError(f"Location with ID {location_id} does not exist.") from exc
 
-        confirmation = input(f"Are you sure you want to delete location '{location.name}'? (y/N): ")
+        confirmation = input(f"Are you sure you want to delete location {location.name!r}? (y/N): ")
 
         if confirmation.lower() == "y":
             location.delete()
-            self.stdout.write(self.style.SUCCESS(f"Successfully deleted location '{location.name}'."))
+            self.stdout.write(self.style.SUCCESS(f"Successfully deleted location {location.name!r}."))
         else:
             self.stdout.write("Deletion cancelled.")

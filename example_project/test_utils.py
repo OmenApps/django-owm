@@ -25,7 +25,7 @@ from src.django_owm.utils.saving import save_weather_data
 class MockModel:
     """Mock model object for testing."""
 
-    def __init__(self):
+    def __init__(self):  # noqa: D107
         self.objects = self
         self.create_calls = 0
         self.last_create_kwargs = None

@@ -2,8 +2,6 @@
 
 import logging
 from decimal import Decimal
-from typing import Optional
-from typing import Union
 
 from celery import shared_task
 from django.apps import apps
@@ -23,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 @shared_task
 @check_api_limits
-def fetch_weather(location_ids: Optional[Union[Decimal, int]] = None) -> None:
+def fetch_weather(location_ids: Decimal | int | None = None) -> None:
     """Fetch current weather data for all locations."""
     WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
 

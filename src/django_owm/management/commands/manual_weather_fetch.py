@@ -37,4 +37,4 @@ class Command(BaseCommand):
         # Fetch weather data for the specific location
         fetch_weather(location_ids=[location_id])
 
-        self.stdout.write(self.style.SUCCESS(f"Successfully fetched weather data for location '{location.name}'."))
+        self.stdout.write(self.style.SUCCESS(f"Successfully fetched weather data for location {location.name!r}."))

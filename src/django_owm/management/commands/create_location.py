@@ -28,4 +28,4 @@ class Command(BaseCommand):
 
         location = WeatherLocationModel.objects.create(name=name, latitude=latitude, longitude=longitude)
 
-        self.stdout.write(self.style.SUCCESS(f"Successfully created location '{location.name}' with ID {location.id}."))
+        self.stdout.write(self.style.SUCCESS(f"Successfully created location {location.name!r} with ID {location.id}."))

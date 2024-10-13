@@ -3,8 +3,6 @@
 from decimal import ROUND_HALF_UP
 from decimal import Decimal
 from decimal import DecimalException
-from typing import Optional
-from typing import Union
 
 from django import forms
 from django.apps import apps
@@ -15,7 +13,7 @@ from .validators import validate_latitude
 from .validators import validate_longitude
 
 
-def quantize_to_2_decimal_places(value: Optional[Union[Decimal, str]]) -> Optional[Decimal]:
+def quantize_to_2_decimal_places(value: Decimal | str | None) -> Decimal | None:
     """Quantize a Decimal value to 2 decimal places."""
     if value is not None:
         if isinstance(value, str):
@@ -25,8 +23,7 @@ def quantize_to_2_decimal_places(value: Optional[Union[Decimal, str]]) -> Option
                 return value
         if isinstance(value, Decimal):
             return value.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
-        else:
-            raise ValueError("Value must be a Decimal or a string that can be converted to a Decimal.")
+        raise ValueError("Value must be a Decimal or a string that can be converted to a Decimal.")
     return value
 
 
@@ -66,6 +63,7 @@ class WeatherLocationForm(forms.ModelForm):
         fields = ["name", "latitude", "longitude"]
 
     def __init__(self, *args, **kwargs):
+        """Initialize the form."""
         super().__init__(*args, **kwargs)
         self.fields["name"].required = False
 

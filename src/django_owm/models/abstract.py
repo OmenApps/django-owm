@@ -68,7 +68,7 @@ class AbstractWeatherLocation(OWM_BASE_MODEL):
 
         abstract = True
 
-    def __str__(self):
+    def __str__(self):  # noqa: D105
         return str(self.name) if self.name else f"{self.latitude}, {self.longitude}"
 
 
@@ -122,7 +122,7 @@ class AbstractCurrentWeather(AbstractBaseWeatherData):
 
         abstract = True
 
-    def __str__(self):
+    def __str__(self):  # noqa: D105
         return f"{self.location.name} - {self.timestamp}"
 
 
@@ -158,7 +158,7 @@ class AbstractMinutelyWeather(OWM_BASE_MODEL):
 
         abstract = True
 
-    def __str__(self):
+    def __str__(self):  # noqa: D105
         return f"{self.location.name} - {self.timestamp}"
 
 
@@ -215,7 +215,7 @@ class AbstractHourlyWeather(AbstractBaseWeatherData):
 
         abstract = True
 
-    def __str__(self):
+    def __str__(self):  # noqa: D105
         return f"{self.location.name} - {self.timestamp}"
 
 
@@ -339,13 +339,12 @@ class AbstractDailyWeather(AbstractBaseWeatherData):
 
         abstract = True
 
-    def __str__(self):
+    def __str__(self):  # noqa: D105
         return f"{self.location.name} - {self.timestamp}"
 
     @property
     def moon_phase_description(self):  # pylint: disable=R0911
         """Return a description of the moon phase."""
-
         match self.moon_phase:
             case 0 | 1:
                 return _("New Moon")
@@ -395,7 +394,7 @@ class AbstractWeatherAlert(OWM_BASE_MODEL):
 
         abstract = True
 
-    def __str__(self):
+    def __str__(self):  # noqa: D105
         return f"{self.location.name} - ({self.start} - {self.end})"
 
 
@@ -425,7 +424,7 @@ class AbstractWeatherErrorLog(OWM_BASE_MODEL):
 
         abstract = True
 
-    def __str__(self):
+    def __str__(self):  # noqa: D105
         return f"{self.api_name} - {self.timestamp}"
 
 
@@ -462,5 +461,5 @@ class AbstractAPICallLog(OWM_BASE_MODEL):
 
         abstract = True
 
-    def __str__(self):
+    def __str__(self):  # noqa: D105
         return f"{self.api_name} - {self.timestamp}"

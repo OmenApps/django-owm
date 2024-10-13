@@ -393,11 +393,11 @@ def test_views_with_invalid_location_id(client, invalid_id):
         with pytest.raises(NoReverseMatch):
             url = reverse(view_name, args=[invalid_id])
             response = client.get(url)
-            assert response.status_code in [404, 400], f"Unexpected status code for {view_name} with id '{invalid_id}'"
+            assert response.status_code in [404, 400], f"Unexpected status code for {view_name} with id {invalid_id!r}"
 
 
 @pytest.mark.django_db
-def test_weather_history_partial(client, weather_location_instance, current_weather):
+def test_weather_history_partial(client, weather_location_instance, current_weather):  # pylint: disable=W0613
     """Test the weather_history_partial view."""
     url = reverse("django_owm:weather_history_partial", kwargs={"location_id": weather_location_instance.id})
     response = client.get(url)

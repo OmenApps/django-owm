@@ -90,7 +90,7 @@ def test_delete_location_command(capsys, sample_location, monkeypatch):
     call_command("delete_location", str(sample_location.id))
     captured = capsys.readouterr()
 
-    assert f"Successfully deleted location '{sample_location.name}'." in captured.out
+    assert f"Successfully deleted location {sample_location.name!r}." in captured.out
     assert not sample_location.__class__.objects.filter(id=sample_location.id).exists()
 
 

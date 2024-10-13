@@ -2,7 +2,6 @@
 
 import logging
 import uuid
-from typing import Union
 
 from django.apps import apps
 from django.core.paginator import Paginator
@@ -47,7 +46,7 @@ def create_location(request):
     return render(request, "django_owm/create_location.html", context)
 
 
-def delete_location(request, location_id: Union[int, uuid.UUID]):
+def delete_location(request, location_id: int | uuid.UUID):
     """View to delete a weather location."""
     WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
 
@@ -66,7 +65,7 @@ def delete_location(request, location_id: Union[int, uuid.UUID]):
     return render(request, "django_owm/delete_location.html", context)
 
 
-def update_location(request, location_id: Union[int, uuid.UUID]):
+def update_location(request, location_id: int | uuid.UUID):
     """View to update a weather location."""
     WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
 
@@ -89,7 +88,7 @@ def update_location(request, location_id: Union[int, uuid.UUID]):
     return render(request, "django_owm/update_location.html", context)
 
 
-def weather_detail(request, location_id: Union[int, uuid.UUID]):
+def weather_detail(request, location_id: int | uuid.UUID):
     """View to display the weather details for a location."""
     model_mappings = OWM_MODEL_MAPPINGS
     WeatherLocationModel = apps.get_model(model_mappings.get("WeatherLocation"))
@@ -111,7 +110,7 @@ def weather_detail(request, location_id: Union[int, uuid.UUID]):
     return render(request, "django_owm/weather_detail.html", context)
 
 
-def weather_history(request, location_id: Union[int, uuid.UUID]):
+def weather_history(request, location_id: int | uuid.UUID):
     """View to display historical weather data for a location."""
     WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
     CurrentWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("CurrentWeather"))
@@ -131,7 +130,7 @@ def weather_history(request, location_id: Union[int, uuid.UUID]):
     return render(request, "django_owm/weather_history.html", context)
 
 
-def weather_forecast(request, location_id: Union[int, uuid.UUID]):
+def weather_forecast(request, location_id: int | uuid.UUID):
     """View to display weather forecast for a location."""
     WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
     HourlyWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("HourlyWeather"))
@@ -158,7 +157,7 @@ def weather_forecast(request, location_id: Union[int, uuid.UUID]):
     return render(request, "django_owm/weather_forecast.html", context)
 
 
-def weather_alerts(request, location_id: Union[int, uuid.UUID]):
+def weather_alerts(request, location_id: int | uuid.UUID):
     """View to display weather alerts for a location."""
     WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
     WeatherAlertModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherAlert"))
@@ -178,7 +177,7 @@ def weather_alerts(request, location_id: Union[int, uuid.UUID]):
     return render(request, "django_owm/weather_alerts.html", context)
 
 
-def weather_errors(request, location_id: Union[int, uuid.UUID]):
+def weather_errors(request, location_id: int | uuid.UUID):
     """View to display weather errors for a location."""
     WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
     WeatherErrorLogModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherErrorLog"))
@@ -198,7 +197,7 @@ def weather_errors(request, location_id: Union[int, uuid.UUID]):
     return render(request, "django_owm/weather_errors.html", context)
 
 
-def weather_history_partial(request, location_id: Union[int, uuid.UUID]):
+def weather_history_partial(request, location_id: int | uuid.UUID):
     """Partial view to display historical weather data for a location inside weather_detail.html."""
     WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
     CurrentWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("CurrentWeather"))
@@ -221,7 +220,7 @@ def weather_history_partial(request, location_id: Union[int, uuid.UUID]):
     return render(request, "django_owm/partials/weather_history.html", context)
 
 
-def weather_forecast_partial(request, location_id: Union[int, uuid.UUID]):
+def weather_forecast_partial(request, location_id: int | uuid.UUID):
     """Partial view to display weather forecast for a location inside weather_detail.html."""
     WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
     HourlyWeatherModel = apps.get_model(OWM_MODEL_MAPPINGS.get("HourlyWeather"))
@@ -257,7 +256,7 @@ def weather_forecast_partial(request, location_id: Union[int, uuid.UUID]):
     return render(request, "django_owm/partials/weather_forecast.html", context)
 
 
-def weather_alerts_partial(request, location_id: Union[int, uuid.UUID]):
+def weather_alerts_partial(request, location_id: int | uuid.UUID):
     """Partial view to display weather alerts for a location inside weather_detail.html."""
     WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
     WeatherAlertModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherAlert"))
@@ -280,7 +279,7 @@ def weather_alerts_partial(request, location_id: Union[int, uuid.UUID]):
     return render(request, "django_owm/partials/weather_alerts.html", context)
 
 
-def weather_errors_partial(request, location_id: Union[int, uuid.UUID]):
+def weather_errors_partial(request, location_id: int | uuid.UUID):
     """Partial view to display weather errors for a location inside weather_detail.html."""
     WeatherLocationModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherLocation"))
     WeatherErrorLogModel = apps.get_model(OWM_MODEL_MAPPINGS.get("WeatherErrorLog"))
